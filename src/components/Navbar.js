@@ -36,7 +36,7 @@ const Navbar = () => {
                 <Link onClick={closeNav} activeClassName="is-active" className="navbar-item" to="/create-task">Create</Link>
                 <Link onClick={closeNav} activeClassName="is-active" className="navbar-item" to="/tasks">Tasks</Link>
 
-                <div className="navbar-item has-dropdown is-hoverable">
+                {/* <div className="navbar-item has-dropdown is-hoverable">
                     <a className="navbar-link">
                     More
                     </a>
@@ -56,7 +56,7 @@ const Navbar = () => {
                         Report an issue
                     </a>
                     </div>
-                </div>
+                </div> */}
             </div>
 
             <div className="navbar-end">

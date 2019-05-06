@@ -13,6 +13,7 @@ const TodoList = ({tasks,loadTasks}) =>{
 
     return (
         <div className="section">
+            <h3 className="subtitle">Tasks</h3>
             {tasks.map(task=><Todo key={task.title} {...task} />)}
         </div>
     );

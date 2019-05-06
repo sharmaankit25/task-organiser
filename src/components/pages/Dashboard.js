@@ -1,7 +1,14 @@
 import React from "react";
+import TodoList from "../TodoList";
 
-const Dashboard = () => (
-    <h1>Dashboard</h1>
-);
+
+const Dashboard = () => {
+    return (
+        <div className="section">
+        <h1 className="title">Dashboard</h1>
+        <TodoList/>
+        </div>
+    );
+}
 
 export default Dashboard;
