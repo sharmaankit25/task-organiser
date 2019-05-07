@@ -17,7 +17,6 @@ const Navbar = ({auth}) => {
   const closeNav = () => {
     setActive("");
   };
-console.log(auth);
   return (
     <nav className="navbar" role="navigation" aria-label="main navigation">
       <div className="navbar-brand">
@@ -43,7 +42,9 @@ console.log(auth);
         </a>
       </div>
 
+      
       <div className={`navbar-menu ${active}`}>
+      {auth ?
         <div className="navbar-start">
           <Link onClick={closeNav} className="navbar-item" to="/">
             Home
@@ -87,12 +88,12 @@ console.log(auth);
                     </div>
                 </div> */}
         </div>
-
+      : ""}
         <div className="navbar-end">
           <div className="navbar-item">
             <div className="buttons">
               <a className="button is-primary">
-                <strong>Sign up</strong>
+                <strong>Account</strong>
               </a>
               {auth ? <LogoutBtn/> :
               <Link onClick={closeNav} className="button is-light" to="/login">

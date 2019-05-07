@@ -2,7 +2,7 @@ import React,{useState} from "react";
 import { connect } from "react-redux";
 import { login } from "../../actions/index";
 
-const Login = ({ login }) => {
+const Login = ({ login,history }) => {
   const [credentials,setCredentials] = useState({
     email:"",
     password:""
@@ -11,6 +11,7 @@ const Login = ({ login }) => {
   const authenticate = evt => {
     evt.preventDefault();
     login(credentials);
+    history.push('/');
   };
   
   return (
