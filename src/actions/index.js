@@ -44,9 +44,16 @@ export function logout() {
 }
 
 export function login({ email, password }) {
-  console.log(email);
-  localStorage.setItem("token", email);
+  const token = "343h4vb23jh4v23j4v";
+  localStorage.setItem("token", token);
   return { type: LOGIN };
+}
+
+export function setAuthorizationToken(token){
+  if(token){
+    // localStorage.setItem("token", token);
+    // Settings in axios as well
+  }
 }
 
 export function authError(error) {

@@ -1,31 +1,43 @@
-import React from "react";
+import React,{useState} from "react";
 import { connect } from "react-redux";
 import { login } from "../../actions/index";
 
 const Login = ({ login }) => {
+  const [credentials,setCredentials] = useState({
+    email:"",
+    password:""
+  });
+
   const authenticate = evt => {
     evt.preventDefault();
-    login({ email: "Ankit", password: "asdad" });
+    login(credentials);
   };
+  
   return (
     <div className="section">
       <form onSubmit={authenticate}>
         <div className="field">
-          <p class="control has-icons-left has-icons-right">
-            <input class="input" type="email" placeholder="Email" />
-            <span class="icon is-small is-left">
-              <i class="fas fa-envelope" />
+          <p className="control has-icons-left has-icons-right">
+            <input className="input" type="email" placeholder="Email"
+              value={credentials.email}
+              onChange={e=>setCredentials({...credentials,email:e.target.value})}
+            />
+            <span className="icon is-small is-left">
+              <i className="fas fa-envelope" />
             </span>
-            <span class="icon is-small is-right">
-              <i class="fas fa-check" />
+            <span className="icon is-small is-right">
+              <i className="fas fa-check" />
             </span>
           </p>
         </div>
         <div className="field">
-          <p class="control has-icons-left">
-            <input class="input" type="password" placeholder="Password" />
-            <span class="icon is-small is-left">
-              <i class="fas fa-lock" />
+          <p className="control has-icons-left">
+            <input className="input" type="password" placeholder="Password" 
+              value={credentials.password}
+              onChange={e=>setCredentials({...credentials,password:e.target.value})}
+              />
+            <span className="icon is-small is-left">
+              <i className="fas fa-lock" />
             </span>
           </p>
         </div>

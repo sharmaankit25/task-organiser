@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { NavLink as Link } from "react-router-dom";
+import LogoutBtn from "./LogoutBtn";
+import {connect} from "react-redux";
 
-const Navbar = () => {
+const Navbar = ({auth}) => {
   const [active, setActive] = useState("");
   const toggleNav = evt => {
     // evt.preventDefault();
@@ -15,7 +17,7 @@ const Navbar = () => {
   const closeNav = () => {
     setActive("");
   };
-
+console.log(auth);
   return (
     <nav className="navbar" role="navigation" aria-label="main navigation">
       <div className="navbar-brand">
@@ -92,9 +94,11 @@ const Navbar = () => {
               <a className="button is-primary">
                 <strong>Sign up</strong>
               </a>
+              {auth ? <LogoutBtn/> :
               <Link onClick={closeNav} className="button is-light" to="/login">
                 Login
               </Link>
+              }
             </div>
           </div>
         </div>
@@ -103,4 +107,8 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+const mapStateToProps = ({auth}) =>{
+    return {auth:auth.authenticated}
+}
+
+export default connect(mapStateToProps)(Navbar);
