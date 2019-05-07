@@ -45,14 +45,14 @@ const CreateTodo = ({addTask}) =>{
                 <div className="control">
                     <div className="select is-primary">
                     <select value={task.repeat} onChange={(e)=>setTask({...task,repeat:e.target.value})}>
-                        <option>One Time</option>
-                        <option>Daily</option>
-                        <option>Weekly</option>
-                        <option>Monthly</option>
-                        <option>Quarterly</option>
-                        <option>Tri Annual</option>
-                        <option>Bi Annual</option>
-                        <option>Annual</option>
+                        <option value="one-time">One Time</option>
+                        <option value="daily">Daily</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="monthly">Monthly</option>
+                        <option value="quarterly">Quarterly</option>
+                        <option value="tri-annual">Tri Annual</option>
+                        <option value="bi-annual">Bi Annual</option>
+                        <option value="annual">Annual</option>
                     </select>   
                     </div>
                 </div>
