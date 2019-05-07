@@ -43,7 +43,7 @@ export function logout() {
   };
 }
 
-export function login({ email, password }) {
+export function login({ email, password}) {
   const token = "343h4vb23jh4v23j4v";
   localStorage.setItem("token", token);
   return { type: LOGIN };

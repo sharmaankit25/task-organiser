@@ -4,12 +4,12 @@ import { Provider } from "react-redux";
 import Navbar from "./components/Navbar"
 import routes from "./routes";
 import store from "./store";
-import {login} from "./actions/index"
+import {LOGIN} from "./actions/types"
 
 function App() {
   if(localStorage.token){
     // Set auth token in axios
-    store.dispatch(login({email:"ankit@acadbee.com",password:"abc"}));
+    store.dispatch({type:LOGIN});
   }
   return (
     <Provider store={store}>
