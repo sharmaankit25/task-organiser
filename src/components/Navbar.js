@@ -65,6 +65,22 @@ const Navbar = ({auth}) => {
           >
             Tasks
           </Link>
+          <Link
+            onClick={closeNav}
+            activeClassName="is-active"
+            className="navbar-item"
+            to="/groups"
+          >
+            Groups
+          </Link>
+          <Link
+            onClick={closeNav}
+            activeClassName="is-active"
+            className="navbar-item"
+            to="/members"
+          >
+            Members
+          </Link>
 
           {/* <div className="navbar-item has-dropdown is-hoverable">
                     <a className="navbar-link">

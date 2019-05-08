@@ -16,7 +16,7 @@ const Todo = ({title,isCompleted,toggleTaskStatus,dueDate}) =>{
             <span className="subtitle">{title}</span>
         </label>
         <div className="is-pulled-right">
-        <time dateTime={dueDate}>{dueDate}</time>
+        <time className="tag is-warning" dateTime={dueDate}>{dueDate}</time>
         </div>
     </div>);
 
