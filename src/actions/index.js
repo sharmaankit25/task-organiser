@@ -2,6 +2,7 @@ import {
   ADD_TASK,
   LOAD_TASKS,
   TOGGLE_TASK_STATUS,
+  FILTER_TASKS,
   LOGIN,
   LOGOUT,
   AUTH_ERROR
@@ -21,13 +22,20 @@ export const loadTasks = () => {
     type: LOAD_TASKS,
     payload: {
       assignee: "ankit",
-      dueDate: "",
+      dueDate: "2019-05-10",
       repeat: "once",
       title: "Fetched async from server",
       isCompleted: false
     }
   };
 };
+
+export const filterTasks = () => {
+  return {
+    type:FILTER_TASKS,
+    payload:{dueDate:new Date()}
+  }
+}
 
 export const toggleTaskStatus = task => {
   return {

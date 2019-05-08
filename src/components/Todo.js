@@ -1,7 +1,7 @@
 import React,{useState} from "react"
 import {connect} from "react-redux";
 import {toggleTaskStatus} from "../actions/index";
-const Todo = ({title,isCompleted,toggleTaskStatus}) =>{
+const Todo = ({title,isCompleted,toggleTaskStatus,dueDate}) =>{
     const toggleTask = (evt) => {
         toggleTaskStatus({title});
     }
@@ -15,6 +15,9 @@ const Todo = ({title,isCompleted,toggleTaskStatus}) =>{
                 /> {" "}
             <span className="subtitle">{title}</span>
         </label>
+        <div className="is-pulled-right">
+        <time dateTime={dueDate}>{dueDate}</time>
+        </div>
     </div>);
 
 }

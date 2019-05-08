@@ -14,7 +14,25 @@ const TodoList = ({tasks,loadTasks}) =>{
     return (
         <div className="section">
             <h3 className="subtitle">Tasks</h3>
-            {tasks.map(task=><Todo key={task.title} {...task} />)}
+            <div className="columns is-multiple">
+                <div className="column box">
+                    <label className="label">Todo</label>
+                    {   
+                        tasks
+                        .filter(task=>task.isCompleted === false)
+                        .map(task=><Todo key={task.title} {...task} />)
+                    }
+                </div>
+                <div className="column box">
+                    <label className="label">Completed</label>
+                    {   
+                        tasks
+                        .filter(task=>task.isCompleted === true)
+                        .map(task=><Todo key={task.title} {...task} />)
+                    }
+                </div>
+            </div>
+            
         </div>
     );
 };
