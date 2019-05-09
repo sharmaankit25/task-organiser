@@ -1,6 +1,6 @@
 import { AUTH_ERROR, LOGIN, LOGOUT } from "../actions/types";
 
-export default function(state = { authenticated: false }, action) {
+export default (state = { authenticated: false }, action) => {
   switch (action.type) {
     case LOGIN:
       return { ...state, authenticated: true };
@@ -11,4 +11,4 @@ export default function(state = { authenticated: false }, action) {
     default:
       return state;
   }
-}
+};

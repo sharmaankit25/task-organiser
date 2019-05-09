@@ -1,6 +1,6 @@
 import { ADD_MEMBER, LOAD_MEMBERS } from "../actions/types";
 
-const groups = (state = [], action) => {
+export default (state = [], action) => {
   switch (action.type) {
     case ADD_MEMBER:
       return [...state, action.payload];
@@ -10,5 +10,3 @@ const groups = (state = [], action) => {
       return state;
   }
 };
-
-export default groups;

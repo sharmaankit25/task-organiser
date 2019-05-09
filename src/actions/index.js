@@ -2,7 +2,6 @@ import {
   ADD_TASK,
   LOAD_TASKS,
   TOGGLE_TASK_STATUS,
-  FILTER_TASKS,
   LOGIN,
   LOGOUT,
   AUTH_ERROR,
@@ -33,13 +32,6 @@ export const loadTasks = () => {
         isCompleted: false
       }
     ]
-  };
-};
-
-export const filterTasks = () => {
-  return {
-    type: FILTER_TASKS,
-    payload: { dueDate: new Date() }
   };
 };
 
@@ -80,7 +72,7 @@ export function authError(error) {
 export const createGroup = group => {
   return {
     type: ADD_GROUP,
-    payload: group
+    payload: { ...group, slug: group.title }
   };
 };
 
@@ -90,7 +82,8 @@ export const loadGroups = () => {
     payload: [
       {
         title: "family",
-        description: "my family group"
+        description: "my family group",
+        slug: "family"
       }
     ]
   };
