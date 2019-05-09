@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { NavLink as Link } from "react-router-dom";
 import LogoutBtn from "./LogoutBtn";
-import {connect} from "react-redux";
+import { connect } from "react-redux";
 
-const Navbar = ({auth}) => {
+const Navbar = ({ auth }) => {
   const [active, setActive] = useState("");
   const toggleNav = evt => {
     // evt.preventDefault();
-    if (active != "") {
+    if (active !== "") {
       setActive("");
     } else {
       setActive("is-active");
@@ -23,7 +23,8 @@ const Navbar = ({auth}) => {
         <Link onClick={closeNav} className="navbar-item" to="/">
           <img
             src="https://bulma.io/images/bulma-logo.png"
-            alt="Bulma: Free, open source, & modern CSS framework based on Flexbox"
+            alt="task-organiser"
+            title="task organiser"
             width="112"
             height="28"
           />
@@ -42,47 +43,46 @@ const Navbar = ({auth}) => {
         </a>
       </div>
 
-      
       <div className={`navbar-menu ${active}`}>
-      {auth ?
-        <div className="navbar-start">
-          <Link onClick={closeNav} className="navbar-item" to="/">
-            Home
-          </Link>
-          <Link
-            onClick={closeNav}
-            activeClassName="is-active"
-            className="navbar-item"
-            to="/create-task"
-          >
-            Create
-          </Link>
-          <Link
-            onClick={closeNav}
-            activeClassName="is-active"
-            className="navbar-item"
-            to="/tasks"
-          >
-            Tasks
-          </Link>
-          <Link
-            onClick={closeNav}
-            activeClassName="is-active"
-            className="navbar-item"
-            to="/groups"
-          >
-            Groups
-          </Link>
-          <Link
-            onClick={closeNav}
-            activeClassName="is-active"
-            className="navbar-item"
-            to="/members"
-          >
-            Members
-          </Link>
+        {auth ? (
+          <div className="navbar-start">
+            <Link onClick={closeNav} className="navbar-item" to="/">
+              Home
+            </Link>
+            <Link
+              onClick={closeNav}
+              activeClassName="is-active"
+              className="navbar-item"
+              to="/create-task"
+            >
+              Create
+            </Link>
+            <Link
+              onClick={closeNav}
+              activeClassName="is-active"
+              className="navbar-item"
+              to="/tasks"
+            >
+              Tasks
+            </Link>
+            <Link
+              onClick={closeNav}
+              activeClassName="is-active"
+              className="navbar-item"
+              to="/groups"
+            >
+              Groups
+            </Link>
+            <Link
+              onClick={closeNav}
+              activeClassName="is-active"
+              className="navbar-item"
+              to="/members"
+            >
+              Members
+            </Link>
 
-          {/* <div className="navbar-item has-dropdown is-hoverable">
+            {/* <div className="navbar-item has-dropdown is-hoverable">
                     <a className="navbar-link">
                     More
                     </a>
@@ -103,19 +103,27 @@ const Navbar = ({auth}) => {
                     </a>
                     </div>
                 </div> */}
-        </div>
-      : ""}
+          </div>
+        ) : (
+          ""
+        )}
         <div className="navbar-end">
           <div className="navbar-item">
             <div className="buttons">
               <a className="button is-primary">
                 <strong>Account</strong>
               </a>
-              {auth ? <LogoutBtn/> :
-              <Link onClick={closeNav} className="button is-light" to="/login">
-                Login
-              </Link>
-              }
+              {auth ? (
+                <LogoutBtn />
+              ) : (
+                <Link
+                  onClick={closeNav}
+                  className="button is-light"
+                  to="/login"
+                >
+                  Login
+                </Link>
+              )}
             </div>
           </div>
         </div>
@@ -124,8 +132,8 @@ const Navbar = ({auth}) => {
   );
 };
 
-const mapStateToProps = ({auth}) =>{
-    return {auth:auth.authenticated}
-}
+const mapStateToProps = ({ auth }) => {
+  return { auth: auth.authenticated };
+};
 
 export default connect(mapStateToProps)(Navbar);

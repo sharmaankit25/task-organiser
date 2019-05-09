@@ -5,7 +5,11 @@ import {
   FILTER_TASKS,
   LOGIN,
   LOGOUT,
-  AUTH_ERROR
+  AUTH_ERROR,
+  ADD_GROUP,
+  ADD_MEMBER,
+  LOAD_GROUPS,
+  LOAD_MEMBERS
 } from "./types";
 
 // Create a new Task
@@ -20,22 +24,24 @@ export const addTask = task => {
 export const loadTasks = () => {
   return {
     type: LOAD_TASKS,
-    payload: {
-      assignee: "ankit",
-      dueDate: "2019-05-10",
-      repeat: "once",
-      title: "Fetched async from server",
-      isCompleted: false
-    }
+    payload: [
+      {
+        assignee: "ankit",
+        dueDate: "2019-05-10",
+        repeat: "once",
+        title: "Fetched async from server",
+        isCompleted: false
+      }
+    ]
   };
 };
 
 export const filterTasks = () => {
   return {
-    type:FILTER_TASKS,
-    payload:{dueDate:new Date()}
-  }
-}
+    type: FILTER_TASKS,
+    payload: { dueDate: new Date() }
+  };
+};
 
 export const toggleTaskStatus = task => {
   return {
@@ -51,14 +57,14 @@ export function logout() {
   };
 }
 
-export function login({ email, password}) {
+export function login({ email, password }) {
   const token = "343h4vb23jh4v23j4v";
   localStorage.setItem("token", token);
   return { type: LOGIN };
 }
 
-export function setAuthorizationToken(token){
-  if(token){
+export function setAuthorizationToken(token) {
+  if (token) {
     // localStorage.setItem("token", token);
     // Settings in axios as well
   }
@@ -70,3 +76,43 @@ export function authError(error) {
     payload: error
   };
 }
+
+export const createGroup = group => {
+  return {
+    type: ADD_GROUP,
+    payload: group
+  };
+};
+
+export const loadGroups = () => {
+  return {
+    type: LOAD_GROUPS,
+    payload: [
+      {
+        title: "family",
+        description: "my family group"
+      }
+    ]
+  };
+};
+
+export const addMember = member => {
+  return {
+    type: ADD_MEMBER,
+    payload: member
+  };
+};
+
+export const loadMembers = () => {
+  return {
+    type: LOAD_MEMBERS,
+    payload: [
+      {
+        name: "ankit"
+      },
+      {
+        name: "sarthak"
+      }
+    ]
+  };
+};

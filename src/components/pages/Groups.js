@@ -1,76 +1,114 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { connect } from "react-redux";
+import { createGroup, loadGroups, loadMembers } from "../../actions/index";
 
-const Groups = () => {
+const Groups = ({ createGroup, groups, members, loadMembers, loadGroups }) => {
+  const [group, setGroup] = useState({
+    title: "",
+    description: ""
+  });
 
-    return (
-        <section className="section">
-            <div className="columns">
-                <div className="column">
-                    <h1 className="title">Groups List</h1>
-                    <button className="button is-primary">Create Group</button>
-                </div>
-                <div className="column">
-                    <h1 className="title">Create Group</h1>
-                    <div className="box">
-                        <h3 className="subtitle">Create Group</h3>
-                        <form>
-                        <div className="field">
-                            <label className="label">Title</label>
-                            <div className="control">
-                                <input className="input is-info" type="text" placeholder="Enter Title" />
-                            </div>
-                        </div>
+  useEffect(() => {
+    if (!groups.length) {
+      loadGroups();
+    }
+    if (!members.length) {
+      loadMembers();
+    }
+  });
 
-                        <div className="field">
-                            <label className="label">Description</label>
-                            <div className="control">
-                                <textarea className="textarea" placeholder="e.g. Family group (Optional)"></textarea>
-                            </div>
-                        </div>
-
-                        <div className="file">
-                        <label className="file-label">
-                            <input className="file-input" type="file" name="resume"/>
-                            <span className="file-cta">
-                            <span className="file-icon">
-                                <i className="fas fa-upload"></i>
-                            </span>
-                            <span className="file-label">
-                                Upload Profile Picture..
-                            </span>
-                            </span>
-                        </label>
-                        </div>
-
-                        <div className="field">
-                            <label className="label">Type</label>
-                            <div className="control">
-                            <div className="select is-multiple ">
-                            <select multiple>
-                                <option value="Argentina">Argentina</option>
-                                <option value="Bolivia">Bolivia</option>
-                                <option value="Brazil">Brazil</option>
-                                <option value="Chile">Chile</option>
-                                <option value="Colombia">Colombia</option>
-                                <option value="Ecuador">Ecuador</option>
-                                <option value="Guyana">Guyana</option>
-                                <option value="Paraguay">Paraguay</option>
-                                <option value="Peru">Peru</option>
-                                <option value="Suriname">Suriname</option>
-                                <option value="Uruguay">Uruguay</option>
-                                <option value="Venezuela">Venezuela</option>
-                            </select>
-                            </div>
-                            </div>
-                        </div>
-
-                        <button className="button is-primary">Create</button>
-                    </form>
-                    </div>
-                </div>
+  const addGroup = evt => {
+    evt.preventDefault();
+    createGroup(group);
+  };
+  return (
+    <section className="section">
+      <div className="columns">
+        <div className="column">
+          <h1 className="title">Groups List</h1>
+          {groups.map(group => (
+            <div key={group.title} className="box">
+              {group.title}
             </div>
-        </section>
-    )
-}
+          ))}
+          <button className="button is-primary">Create Group</button>
+        </div>
+        <div className="column">
+          <h1 className="title">Create Group</h1>
+          <div className="box">
+            <h3 className="subtitle">Create Group</h3>
+            <form onSubmit={addGroup}>
+              <div className="field">
+                <label className="label">Title</label>
+                <div className="control">
+                  <input
+                    value={group.title}
+                    onChange={e =>
+                      setGroup({ ...group, title: e.target.value })
+                    }
+                    className="input is-info"
+                    type="text"
+                    placeholder="Enter Title"
+                  />
+                </div>
+              </div>
 
-export default Groups;
+              <div className="field">
+                <label className="label">Description</label>
+                <div className="control">
+                  <textarea
+                    value={group.description}
+                    onChange={e =>
+                      setGroup({ ...group, description: e.target.value })
+                    }
+                    className="textarea"
+                    placeholder="e.g. Family group (Optional)"
+                  />
+                </div>
+              </div>
+
+              <div className="file">
+                <label className="file-label">
+                  <input className="file-input" type="file" name="resume" />
+                  <span className="file-cta">
+                    <span className="file-icon">
+                      <i className="fas fa-upload" />
+                    </span>
+                    <span className="file-label">Upload Profile Picture..</span>
+                  </span>
+                </label>
+              </div>
+
+              <div className="field">
+                <label className="label">Members</label>
+                <div className="control">
+                  <div className="select is-multiple ">
+                    <select multiple>
+                      {members.map(member => (
+                        <option value={member.name}>{member.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <button className="button is-primary">Create</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const mapStateToProps = ({ groups, members }) => {
+  return {
+    groups,
+    members
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  { createGroup, loadGroups, loadMembers }
+)(Groups);
