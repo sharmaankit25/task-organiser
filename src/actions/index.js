@@ -29,7 +29,8 @@ export const loadTasks = () => {
         dueDate: "2019-05-10",
         repeat: "once",
         title: "Fetched async from server",
-        isCompleted: false
+        isCompleted: false,
+        groupSlug:"family"
       }
     ]
   };

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { addMember, loadMembers } from "../../actions/index";
+import MembersList from "../MembersList"
 
 const Members = ({ addMember, members, loadMembers }) => {
   const [member, setMember] = useState({
@@ -23,11 +24,7 @@ const Members = ({ addMember, members, loadMembers }) => {
       <div className="columns">
         <div className="column">
           <h1 className="title">Members List</h1>
-          {members.map(member => (
-            <div key={member.name} className="box">
-              {member.name}
-            </div>
-          ))}
+          <MembersList members={members}/>
         </div>
         <div className="column">
           <h1 className="title">Create Member</h1>
@@ -58,9 +55,10 @@ const Members = ({ addMember, members, loadMembers }) => {
   );
 };
 
-const mapStateToProps = ({ members }) => {
+const mapStateToProps = ({ members,groups }) => {
   return {
-    members
+    members,
+    groups
   };
 };
 

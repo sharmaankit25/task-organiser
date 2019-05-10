@@ -2,23 +2,25 @@ import React, { useState } from "react";
 import { connect } from "react-redux";
 import { addTask } from "../actions/index";
 
-const CreateTodo = ({ addTask }) => {
-  const state = {
+const CreateTodo = ({ addTask,groupSlug }) => {
+  const initialState = {
     title: "",
     assignee: "",
     dueDate: "",
     repeat: "",
-    isCompleted: false
+    isCompleted: false,
+    groupSlug:groupSlug?groupSlug:""
   };
-  const [task, setTask] = useState(state);
+  const [task, setTask] = useState(initialState);
 
   const submitTask = evt => {
     evt.preventDefault();
+    console.log(task);
     addTask(task);
-    setTask(state);
+    setTask(initialState);
   };
   return (
-    <div className="section">
+    <>
       <h2 className="title">Create Todo</h2>
       <form onSubmit={submitTask}>
         <div className="field">
@@ -83,7 +85,7 @@ const CreateTodo = ({ addTask }) => {
 
         <button className="button is-primary">Add +</button>
       </form>
-    </div>
+    </>
   );
 };
 

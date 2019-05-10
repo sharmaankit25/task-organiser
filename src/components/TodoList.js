@@ -16,13 +16,13 @@ const TodoList = ({ tasks, loadTasks }) => {
     <div className="section">
       <h3 className="subtitle">Tasks</h3>
       <div className="columns is-multiple">
-        <div className="column box">
+        <div className="column card">
           <label className="label">Todo</label>
           {filterTasks(tasks, { isCompleted: false }).map(task => (
             <Todo key={task.title} {...task} />
           ))}
         </div>
-        <div className="column box">
+        <div className="column card">
           <label className="label">Completed</label>
           {filterTasks(tasks, { isCompleted: true }).map(task => (
             <Todo key={task.title} {...task} />

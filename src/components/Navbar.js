@@ -49,14 +49,7 @@ const Navbar = ({ auth }) => {
             <Link onClick={closeNav} className="navbar-item" to="/">
               Home
             </Link>
-            <Link
-              onClick={closeNav}
-              activeClassName="is-active"
-              className="navbar-item"
-              to="/create-task"
-            >
-              Create
-            </Link>
+            
             <Link
               onClick={closeNav}
               activeClassName="is-active"

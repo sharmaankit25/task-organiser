@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { createGroup, loadGroups, loadMembers } from "../../actions/index";
+import { NavLink as Link } from "react-router-dom";
 
 const Groups = ({ createGroup, groups, members, loadMembers, loadGroups }) => {
   const [group, setGroup] = useState({
@@ -28,7 +29,7 @@ const Groups = ({ createGroup, groups, members, loadMembers, loadGroups }) => {
           <h1 className="title">Groups List</h1>
           {groups.map(group => (
             <div key={group.title} className="box">
-              {group.title}
+              <Link key={group.slug} className="is-link is-danger" to={`groups/${group.slug}`}>{group.title}</Link>
             </div>
           ))}
           <button className="button is-primary">Create Group</button>
