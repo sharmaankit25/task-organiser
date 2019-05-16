@@ -26,11 +26,19 @@ export const loadTasks = () => {
     payload: [
       {
         assignee: "ankit",
-        dueDate: "2019-05-10",
+        dueDate: "2019-05-17",
         repeat: "once",
         title: "Fetched async from server",
         isCompleted: false,
-        groupSlug:"family"
+        groupSlug: "office"
+      },
+      {
+        assignee: "ankit",
+        dueDate: "2019-05-16",
+        repeat: "once",
+        title: "Go out on a holiday",
+        isCompleted: false,
+        groupSlug: "family"
       }
     ]
   };
@@ -85,6 +93,11 @@ export const loadGroups = () => {
         title: "family",
         description: "my family group",
         slug: "family"
+      },
+      {
+        title: "office",
+        description: "my family group",
+        slug: "office"
       }
     ]
   };

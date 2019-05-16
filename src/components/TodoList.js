@@ -4,27 +4,26 @@ import { connect } from "react-redux";
 import { loadTasks } from "../actions/index";
 import filterTasks from "../selectors/tasks";
 
-const TodoList = ({ tasks, loadTasks }) => {
+const TodoList = ({ tasks, loadTasks, groupSlug }) => {
   // Similar to componentDidMount and componentDidUpdate:
   useEffect(() => {
     if (tasks.length <= 0) {
       loadTasks();
     }
   });
-
   return (
     <div className="section">
       <h3 className="subtitle">Tasks</h3>
       <div className="columns is-multiple">
         <div className="column card">
           <label className="label">Todo</label>
-          {filterTasks(tasks, { isCompleted: false }).map(task => (
+          {filterTasks(tasks, { isCompleted: false, groupSlug }).map(task => (
             <Todo key={task.title} {...task} />
           ))}
         </div>
         <div className="column card">
           <label className="label">Completed</label>
-          {filterTasks(tasks, { isCompleted: true }).map(task => (
+          {filterTasks(tasks, { isCompleted: true, groupSlug }).map(task => (
             <Todo key={task.title} {...task} />
           ))}
         </div>

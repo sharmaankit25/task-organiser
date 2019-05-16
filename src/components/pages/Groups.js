@@ -28,8 +28,14 @@ const Groups = ({ createGroup, groups, members, loadMembers, loadGroups }) => {
         <div className="column">
           <h1 className="title">Groups List</h1>
           {groups.map(group => (
-            <div key={group.title} className="box">
-              <Link key={group.slug} className="is-link is-danger" to={`groups/${group.slug}`}>{group.title}</Link>
+            <div key={group.slug} className="box">
+              <Link
+                key={group.slug}
+                className="is-link is-danger"
+                to={`groups/${group.slug}`}
+              >
+                {group.title}
+              </Link>
             </div>
           ))}
           <button className="button is-primary">Create Group</button>
@@ -86,7 +92,9 @@ const Groups = ({ createGroup, groups, members, loadMembers, loadGroups }) => {
                   <div className="select is-multiple ">
                     <select multiple>
                       {members.map(member => (
-                        <option value={member.name}>{member.name}</option>
+                        <option key={member.name} value={member.name}>
+                          {member.name}
+                        </option>
                       ))}
                     </select>
                   </div>
