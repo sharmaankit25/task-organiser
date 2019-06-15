@@ -1,5 +1,5 @@
-export default (groups) => {
-    return groups.filter(task => {
-      return true;
-    });
+export default (groups,{slug}) => {
+    return groups.filter(group => {
+      return group.slug === slug;
+    })[0];
 };

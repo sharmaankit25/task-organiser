@@ -92,12 +92,14 @@ export const loadGroups = () => {
       {
         title: "family",
         description: "my family group",
-        slug: "family"
+        slug: "family",
+        members:[1,2]
       },
       {
         title: "office",
         description: "my family group",
-        slug: "office"
+        slug: "office",
+        members:[2]
       }
     ]
   };
@@ -115,9 +117,11 @@ export const loadMembers = () => {
     type: LOAD_MEMBERS,
     payload: [
       {
+        id:1,
         name: "ankit"
       },
       {
+        id:2,
         name: "sarthak"
       }
     ]

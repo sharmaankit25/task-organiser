@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import CreateTodos from "../CreateTodo";
 import TasksList from "../TodoList";
+import GroupMembers from "../GroupMembers";
 
 const GroupDetails = ({ match }) => {
   const slug = match.params.slug;
@@ -14,7 +15,7 @@ const GroupDetails = ({ match }) => {
     <section className="section">
       <h2 className="title">Group Name Comes Here</h2>
       <a
-        href
+        href="#"
         onClick={toggleCreateTaskFrom}
         className={
           todoFormStatus
@@ -26,6 +27,7 @@ const GroupDetails = ({ match }) => {
       </a>
       {todoFormStatus ? <CreateTodos groupSlug={slug} /> : ""}
       <TasksList groupSlug={slug} />
+      <GroupMembers slug={slug}/>
     </section>
   );
 };

@@ -6,7 +6,8 @@ import { NavLink as Link } from "react-router-dom";
 const Groups = ({ createGroup, groups, members, loadMembers, loadGroups }) => {
   const [group, setGroup] = useState({
     title: "",
-    description: ""
+    description: "",
+    members:[...members]
   });
 
   useEffect(() => {
@@ -20,6 +21,7 @@ const Groups = ({ createGroup, groups, members, loadMembers, loadGroups }) => {
 
   const addGroup = evt => {
     evt.preventDefault();
+    console.log(group);
     createGroup(group);
   };
   return (
@@ -90,9 +92,9 @@ const Groups = ({ createGroup, groups, members, loadMembers, loadGroups }) => {
                 <label className="label">Members</label>
                 <div className="control">
                   <div className="select is-multiple ">
-                    <select multiple>
+                    <select multiple onChange={(e)=>setGroup({ ...group, members:[parseInt(e.target.value)] })}>
                       {members.map(member => (
-                        <option key={member.name} value={member.name}>
+                        <option key={member.id} value={member.id}>
                           {member.name}
                         </option>
                       ))}
