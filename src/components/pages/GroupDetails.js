@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import CreateTodos from "../CreateTodo";
 import TasksList from "../TodoList";
-import GroupMembers from "../GroupMembers";
+import { connect } from "react-redux";
+import groupFilter from "../../selectors/groups"
+import MembersList from "../MembersList"
 
-const GroupDetails = ({ match }) => {
-  const slug = match.params.slug;
+const GroupDetails = ({ match:{params:{slug}},groups,members }) => {
   const [todoFormStatus, setTodoFormStatus] = useState(false);
+  const group = groupFilter(groups,{slug});
+  const group_members = members.filter(member=>group.members.includes(member.id));
   const toggleCreateTaskFrom = evt => {
     evt.preventDefault();
     setTodoFormStatus(!todoFormStatus);
@@ -25,11 +28,24 @@ const GroupDetails = ({ match }) => {
       >
         {todoFormStatus ? "Close" : "Create New Task"}
       </a>
-      {todoFormStatus ? <CreateTodos groupSlug={slug} /> : ""}
+      {todoFormStatus ? <CreateTodos groupSlug={slug} members={group_members} /> : ""}
       <TasksList groupSlug={slug} />
-      <GroupMembers slug={slug}/>
+      <div className="section">
+      <h3 className="subtitle">Members</h3>
+        <MembersList members={group_members} />
+      </div>
     </section>
   );
 };
 
-export default GroupDetails;
+const mapStateToProps = ({ groups, members }) => {
+  return {
+    groups,
+    members
+  };
+};
+
+export default connect(
+  mapStateToProps,
+)(GroupDetails);
+

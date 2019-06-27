@@ -1,19 +1,34 @@
-import React, { useState } from "react";
+import React, {FC,useState } from "react";
 import { connect } from "react-redux";
 import { addTask } from "../actions/index";
 
-const CreateTodo = ({ addTask,groupSlug }) => {
+interface ITask {
+  title:string;
+  assignee:string[];
+  dueDate:string;
+  repeat:string;
+  isCompleted:boolean;
+  groupSlug:any;
+}
+
+interface IProps {
+  addTask:(task:ITask)=>void;
+  groupSlug:string;
+  members:any[];
+}
+
+const CreateTodo:FC<IProps> = ({ addTask,groupSlug,members }) => {
   const initialState = {
     title: "",
-    assignee: "",
+    assignee: [],
     dueDate: "",
     repeat: "",
     isCompleted: false,
     groupSlug:groupSlug?groupSlug:""
   };
-  const [task, setTask] = useState(initialState);
+  const [task, setTask] = useState<ITask>(initialState);
 
-  const submitTask = evt => {
+  const submitTask = (evt: { preventDefault: () => void; }) => {
     evt.preventDefault();
     console.log(task);
     addTask(task);
@@ -39,9 +54,13 @@ const CreateTodo = ({ addTask,groupSlug }) => {
         <div className="field">
           <label className="label">Assignee</label>
           <div className="control">
+          <select className="select">
+          {members.map(member=><option key={member.id} value={member.id}>{member.name}</option>)}
+          </select>
+          
             <input
               value={task.assignee}
-              onChange={e => setTask({ ...task, assignee: e.target.value })}
+              onChange={e => setTask({ ...task, assignee:[...task.assignee,e.target.value] })}
               className="input is-info"
               type="text"
               placeholder="Assignee..."
