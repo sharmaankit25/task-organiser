@@ -10,6 +10,8 @@ const Groups = ({ createGroup, groups, members, loadMembers, loadGroups }) => {
     members:[...members]
   });
 
+  // const []
+
   useEffect(() => {
     if (!groups.length) {
       loadGroups();
@@ -21,23 +23,32 @@ const Groups = ({ createGroup, groups, members, loadMembers, loadGroups }) => {
 
   const addGroup = evt => {
     evt.preventDefault();
-    console.log(group);
     createGroup(group);
   };
+
+  const editGroup = (group) => {
+    setGroup(group);
+  }
+
   return (
     <section className="section">
       <div className="columns">
         <div className="column">
           <h1 className="title">Groups List</h1>
           {groups.map(group => (
-            <div key={group.slug} className="box">
+            <div key={group.slug} className="box has-background-light">
               <Link
                 key={group.slug}
-                className="is-link is-danger"
+                className="button is-info is-outlined"
                 to={`groups/${group.slug}`}
               >
                 {group.title}
               </Link>
+              <div className="is-pulled-right" onClick={e => editGroup(group)}>
+                <span className="icon is-medium">
+                <i className="fa fa-edit"></i>
+                </span>
+              </div>
             </div>
           ))}
           <button className="button is-primary">Create Group</button>
@@ -94,7 +105,7 @@ const Groups = ({ createGroup, groups, members, loadMembers, loadGroups }) => {
                   <div className="select is-multiple ">
                     <select multiple onChange={(e)=>setGroup({ ...group, members:[parseInt(e.target.value)] })}>
                       {members.map(member => (
-                        <option key={member.id} value={member.id}>
+                        <option key={member.id} value={member.id} selected={(group.members.includes(member.id)) ? true : false }>
                           {member.name}
                         </option>
                       ))}

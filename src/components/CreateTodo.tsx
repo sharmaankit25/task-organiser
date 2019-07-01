@@ -4,7 +4,7 @@ import { addTask } from "../actions/index";
 
 interface ITask {
   title:string;
-  assignee:string[];
+  assignee:number[];
   dueDate:string;
   repeat:string;
   isCompleted:boolean;
@@ -15,13 +15,20 @@ interface IProps {
   addTask:(task:ITask)=>void;
   groupSlug:string;
   members:any[];
+  visibility:boolean;
 }
 
-const CreateTodo:FC<IProps> = ({ addTask,groupSlug,members }) => {
+const CreateTodo:FC<IProps> = ({ addTask,groupSlug,members,visibility }) => {
+    const now = new Date();
+    let dd = String(now.getDate()).padStart(2, '0');
+    let mm = String(now.getMonth() + 1).padStart(2, '0'); //January is 0!
+    let yyyy = now.getFullYear();
+    let today = `${yyyy}-${mm}-${dd}`;
+
   const initialState = {
     title: "",
     assignee: [],
-    dueDate: "",
+    dueDate: today,
     repeat: "",
     isCompleted: false,
     groupSlug:groupSlug?groupSlug:""
@@ -30,11 +37,12 @@ const CreateTodo:FC<IProps> = ({ addTask,groupSlug,members }) => {
 
   const submitTask = (evt: { preventDefault: () => void; }) => {
     evt.preventDefault();
-    console.log(task);
     addTask(task);
     setTask(initialState);
+    visibility = false;
   };
   return (
+    visibility ?
     <>
       <h2 className="title">Create Todo</h2>
       <form onSubmit={submitTask}>
@@ -42,6 +50,7 @@ const CreateTodo:FC<IProps> = ({ addTask,groupSlug,members }) => {
           <label className="label">Title</label>
           <div className="control">
             <input
+              required
               value={task.title}
               onChange={e => setTask({ ...task, title: e.target.value })}
               className="input is-info"
@@ -54,17 +63,12 @@ const CreateTodo:FC<IProps> = ({ addTask,groupSlug,members }) => {
         <div className="field">
           <label className="label">Assignee</label>
           <div className="control">
-          <select className="select">
+          <div className="select is-multiple ">
+          <select multiple
+          onChange={e => setTask({ ...task, assignee:Array.from(e.target.selectedOptions,option => Number(option.value))}) } className="input is-info select">
           {members.map(member=><option key={member.id} value={member.id}>{member.name}</option>)}
           </select>
-          
-            <input
-              value={task.assignee}
-              onChange={e => setTask({ ...task, assignee:[...task.assignee,e.target.value] })}
-              className="input is-info"
-              type="text"
-              placeholder="Assignee..."
-            />
+          </div>
           </div>
         </div>
 
@@ -105,6 +109,7 @@ const CreateTodo:FC<IProps> = ({ addTask,groupSlug,members }) => {
         <button className="button is-primary">Add +</button>
       </form>
     </>
+    : <></>
   );
 };
 
