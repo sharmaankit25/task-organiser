@@ -7,7 +7,7 @@ const Todo = ({ title, isCompleted, toggleTaskStatus, dueDate }) => {
   };
 
   return (
-    <div className="box">
+    <div className="box has-background-light ">
       <label className="checkbox">
         <input type="checkbox" onChange={toggleTask} checked={isCompleted} />{" "}
         <span className="subtitle">{title}</span>

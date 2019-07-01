@@ -103,9 +103,9 @@ const Groups = ({ createGroup, groups, members, loadMembers, loadGroups }) => {
                 <label className="label">Members</label>
                 <div className="control">
                   <div className="select is-multiple ">
-                    <select multiple onChange={(e)=>setGroup({ ...group, members:[parseInt(e.target.value)] })}>
+                    <select value={group.members} multiple onChange={(e)=>setGroup({ ...group, members:[parseInt(e.target.value)] })}>
                       {members.map(member => (
-                        <option key={member.id} value={member.id} selected={(group.members.includes(member.id)) ? true : false }>
+                        <option key={member.id} value={member.id}>
                           {member.name}
                         </option>
                       ))}
