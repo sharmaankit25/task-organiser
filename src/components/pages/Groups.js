@@ -10,7 +10,10 @@ const Groups = ({ createGroup, groups, members, loadMembers, loadGroups }) => {
     members:[...members]
   });
 
-  // const []
+  const [groupForm,setGroupForm] = useState({
+    type:"create",
+    status:false
+  })
 
   useEffect(() => {
     if (!groups.length) {
@@ -23,18 +26,32 @@ const Groups = ({ createGroup, groups, members, loadMembers, loadGroups }) => {
 
   const addGroup = evt => {
     evt.preventDefault();
-    createGroup(group);
+    if(groupForm.type === "create"){
+      createGroup(group);
+    }else{
+      console.log("Edit Group")
+    }
+    setGroupForm({...groupForm,type:"create",status:false})
   };
 
   const editGroup = (group) => {
     setGroup(group);
+    setGroupForm({...groupForm,type:"edit",status:true})
   }
 
   return (
     <section className="section">
+    <div className="is-clearfix">
+      <div className="is-pulled-right ">
+          {groupForm.status === false ? 
+          <button className="button is-primary" onClick={e => setGroupForm({...groupForm,type:"create",status:true})}>Create New</button> :
+          ""}
+      </div>
+    </div>
+    <br/>
       <div className="columns">
+      {(groupForm.status === false) ?
         <div className="column">
-          <h1 className="title">Groups List</h1>
           {groups.map(group => (
             <div key={group.slug} className="box has-background-light">
               <Link
@@ -51,12 +68,18 @@ const Groups = ({ createGroup, groups, members, loadMembers, loadGroups }) => {
               </div>
             </div>
           ))}
-          <button className="button is-primary">Create Group</button>
         </div>
-        <div className="column">
-          <h1 className="title">Create Group</h1>
+        : ""}
+        {(groupForm.status === true) ?
+          <div className="column">
           <div className="box">
-            <h3 className="subtitle">Create Group</h3>
+          <div className="is-pulled-right column">
+          {groupForm.status === true ? 
+          <button onClick={e=>setGroupForm({...groupForm,type:"create",status:false})}>Close</button> :
+          ""
+        }
+      </div>
+            <h3 className="subtitle">{groupForm.type.toUpperCase()} GROUP</h3>
             <form onSubmit={addGroup}>
               <div className="field">
                 <label className="label">Title</label>
@@ -114,10 +137,11 @@ const Groups = ({ createGroup, groups, members, loadMembers, loadGroups }) => {
                 </div>
               </div>
 
-              <button className="button is-primary">Create</button>
+              <button className="button is-primary">{groupForm.type||"Edit"}</button>
             </form>
           </div>
         </div>
+        : ""}
       </div>
     </section>
   );
