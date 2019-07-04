@@ -17,8 +17,7 @@ const GroupDetails = ({ match:{params:{slug}},groups,members }) => {
   return (
     <section className="section">
       <h2 className="title">{group.title}</h2>
-      <a
-        href="#"
+      <button
         onClick={toggleCreateTaskFrom}
         className={
           todoFormStatus
@@ -27,7 +26,7 @@ const GroupDetails = ({ match:{params:{slug}},groups,members }) => {
         }
       >
         {todoFormStatus ? "Close" : "Create New Task"}
-      </a>
+      </button>
       <CreateTodos visibility={todoFormStatus} groupSlug={slug} members={group_members} />
       <TasksList groupSlug={slug} />
       <div className="section">

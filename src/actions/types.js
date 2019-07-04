@@ -6,6 +6,7 @@ export const FILTER_TASKS = "FILTER_TASKS";
 // Groups
 export const ADD_GROUP = "ADD_GROUP";
 export const LOAD_GROUPS = "LOAD_GROUPS";
+export const UPDATE_GROUP = "UPDATE_GROUP";
 export const TOGGLE_GROUP_STATUS = "TOGGLE_GROUP_STATUS";
 
 // Members

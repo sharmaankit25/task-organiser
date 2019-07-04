@@ -41,6 +41,7 @@ const CreateTodo:FC<IProps> = ({ addTask,groupSlug,members,visibility }) => {
     setTask(initialState);
     visibility = false;
   };
+  console.log(task.assignee);
   return (
     visibility ?
     <>
@@ -65,6 +66,7 @@ const CreateTodo:FC<IProps> = ({ addTask,groupSlug,members,visibility }) => {
           <div className="control">
           <div className="select is-multiple ">
           <select multiple
+          value={task.assignee.length > 0 ? task.assignee.toString() : ""} 
           onChange={e => setTask({ ...task, assignee:Array.from(e.target.selectedOptions,option => Number(option.value))}) } className="input is-info select">
           {members.map(member=><option key={member.id} value={member.id}>{member.name}</option>)}
           </select>

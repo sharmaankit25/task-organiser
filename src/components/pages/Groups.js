@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
-import { createGroup, loadGroups, loadMembers } from "../../actions/index";
+import { createGroup, loadGroups, updateGroup ,loadMembers } from "../../actions/index";
 import { NavLink as Link } from "react-router-dom";
 
-const Groups = ({ createGroup, groups, members, loadMembers, loadGroups }) => {
-  const [group, setGroup] = useState({
+const Groups = ({ createGroup,updateGroup, groups, members, loadMembers, loadGroups }) => {
+  const initGroupState = {
     title: "",
     description: "",
     members:[...members]
-  });
+  };
+  const [group, setGroup] = useState(initGroupState);
 
   const [groupForm,setGroupForm] = useState({
     type:"create",
@@ -30,8 +31,10 @@ const Groups = ({ createGroup, groups, members, loadMembers, loadGroups }) => {
       createGroup(group);
     }else{
       console.log("Edit Group")
+      updateGroup(group);
     }
     setGroupForm({...groupForm,type:"create",status:false})
+    setGroup(initGroupState)
   };
 
   const editGroup = (group) => {
@@ -62,8 +65,8 @@ const Groups = ({ createGroup, groups, members, loadMembers, loadGroups }) => {
                 {group.title}
               </Link>
               <div className="is-pulled-right" onClick={e => editGroup(group)}>
-                <span className="icon is-medium">
-                <i className="fa fa-edit"></i>
+                <span className="button icon is-medium has-cursor-pointer">
+                  <i className="fas fa-edit"></i>
                 </span>
               </div>
             </div>
@@ -126,7 +129,7 @@ const Groups = ({ createGroup, groups, members, loadMembers, loadGroups }) => {
                 <label className="label">Members</label>
                 <div className="control">
                   <div className="select is-multiple ">
-                    <select value={group.members} multiple onChange={(e)=>setGroup({ ...group, members:[parseInt(e.target.value)] })}>
+                    <select value={group.members} multiple onChange={(e)=>setGroup({ ...group, members:Array.from(e.target.selectedOptions,option => Number(option.value)) })}>
                       {members.map(member => (
                         <option key={member.id} value={member.id}>
                           {member.name}
@@ -136,7 +139,7 @@ const Groups = ({ createGroup, groups, members, loadMembers, loadGroups }) => {
                   </div>
                 </div>
               </div>
-
+                        
               <button className="button is-primary">{groupForm.type||"Edit"}</button>
             </form>
           </div>
@@ -156,5 +159,5 @@ const mapStateToProps = ({ groups, members }) => {
 
 export default connect(
   mapStateToProps,
-  { createGroup, loadGroups, loadMembers }
+  { createGroup, loadGroups, loadMembers,updateGroup }
 )(Groups);

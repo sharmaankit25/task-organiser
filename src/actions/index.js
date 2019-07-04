@@ -8,7 +8,8 @@ import {
   ADD_GROUP,
   ADD_MEMBER,
   LOAD_GROUPS,
-  LOAD_MEMBERS
+  LOAD_MEMBERS,
+  UPDATE_GROUP
 } from "./types";
 
 // Create a new Task
@@ -81,6 +82,13 @@ export function authError(error) {
 export const createGroup = group => {
   return {
     type: ADD_GROUP,
+    payload: { ...group, slug: group.title }
+  };
+};
+
+export const updateGroup = group => {
+  return {
+    type: UPDATE_GROUP,
     payload: { ...group, slug: group.title }
   };
 };
