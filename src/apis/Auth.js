@@ -17,7 +17,6 @@ export default class Auth {
 
     user(){
         const res = axios.get('/user');
-        console.log(res);
         return res;
     }
 

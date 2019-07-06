@@ -3,7 +3,7 @@ import { NavLink as Link } from "react-router-dom";
 import LogoutBtn from "./LogoutBtn";
 import { connect } from "react-redux";
 
-const Navbar = ({ auth }) => {
+const Navbar = ({ auth,user }) => {
   const [active, setActive] = useState("");
   const toggleNav = evt => {
     // evt.preventDefault();
@@ -17,6 +17,7 @@ const Navbar = ({ auth }) => {
   const closeNav = () => {
     setActive("");
   };
+  
   return (
     <nav className="navbar" role="navigation" aria-label="main navigation">
       <div className="navbar-brand">
@@ -30,17 +31,14 @@ const Navbar = ({ auth }) => {
           />
         </Link>
 
-        <a
-          role="button"
+        <button
           onClick={toggleNav}
           className={`navbar-burger ${active}`}
-          aria-label="menu"
-          aria-expanded="false"
         >
           <span aria-hidden="true" />
           <span aria-hidden="true" />
           <span aria-hidden="true" />
-        </a>
+        </button>
       </div>
 
       <div className={`navbar-menu ${active}`}>
@@ -49,7 +47,6 @@ const Navbar = ({ auth }) => {
             <Link onClick={closeNav} className="navbar-item" to="/">
               Home
             </Link>
-            
             <Link
               onClick={closeNav}
               activeClassName="is-active"
@@ -103,9 +100,11 @@ const Navbar = ({ auth }) => {
         <div className="navbar-end">
           <div className="navbar-item">
             <div className="buttons">
-              <a className="button is-primary">
-                <strong>Account</strong>
-              </a>
+              
+              {auth ? <button className="button is-primary">
+                <strong>{user.name|| "Account"}</strong>
+              </button>:""
+              }
               {auth ? (
                 <LogoutBtn />
               ) : (
@@ -126,7 +125,10 @@ const Navbar = ({ auth }) => {
 };
 
 const mapStateToProps = ({ auth }) => {
-  return { auth: auth.authenticated };
+  return { 
+      auth: auth.authenticated,
+      user:auth.user
+    };
 };
 
 export default connect(mapStateToProps)(Navbar);

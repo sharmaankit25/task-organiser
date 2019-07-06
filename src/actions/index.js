@@ -94,8 +94,8 @@ export function loggingIn() {
   };
 }
 
-export const loggedIn = () => async dispatch => {
-  await dispatch(authUser());
+export const loggedIn = () => dispatch => {
+  dispatch(authUser());
   dispatch({
     type: LOGIN
   });
