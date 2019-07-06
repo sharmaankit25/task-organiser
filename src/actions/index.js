@@ -15,6 +15,7 @@ import {
 } from "./types";
 
 import Auth from '../apis/Auth'
+import {fetchAll} from '../apis/GroupsApi'
 // Create a new Task
 export const addTask = task => {
   return {
@@ -127,24 +128,16 @@ export const updateGroup = group => {
   };
 };
 
-export const loadGroups = () => {
-  return {
-    type: LOAD_GROUPS,
-    payload: [
-      {
-        title: "family",
-        description: "my family group",
-        slug: "family",
-        members:[1,2]
-      },
-      {
-        title: "office",
-        description: "my family group",
-        slug: "office",
-        members:[2]
-      }
-    ]
-  };
+export const loadGroups = () => async dispatch => {
+  try{
+    const groups = await fetchAll();
+    dispatch({
+      type: LOAD_GROUPS,
+      payload:groups.data.data
+    });
+  }catch(err){
+    console.log(err.response);
+  }
 };
 
 export const addMember = member => {

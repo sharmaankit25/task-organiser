@@ -17,9 +17,6 @@ const Groups = ({ createGroup,updateGroup, groups, members, loadMembers, loadGro
   })
 
   useEffect(() => {
-    if (!groups.length) {
-      loadGroups();
-    }
     if (!members.length) {
       loadMembers();
     }
