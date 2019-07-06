@@ -17,3 +17,5 @@ export const LOAD_MEMBERS = "LOAD_MEMBERS";
 export const LOGIN = "LOGIN";
 export const LOGOUT = "LOGOUT";
 export const AUTH_ERROR = "AUTH_ERROR";
+export const LOGGING = "LOGGING";
+export const AUTH_USER = "AUTH_USER";

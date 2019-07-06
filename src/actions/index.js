@@ -9,9 +9,12 @@ import {
   ADD_MEMBER,
   LOAD_GROUPS,
   LOAD_MEMBERS,
-  UPDATE_GROUP
+  UPDATE_GROUP,
+  LOGGING,
+  AUTH_USER
 } from "./types";
 
+import Auth from '../apis/Auth'
 // Create a new Task
 export const addTask = task => {
   return {
@@ -59,11 +62,17 @@ export function logout() {
   };
 }
 
-export function login({ email, password }) {
-  const token = "343h4vb23jh4v23j4v";
-  localStorage.setItem("token", token);
-  return { type: LOGIN };
+export const login = ({ email, password }) => async dispatch =>{
+    try {
+      const {data} = await new Auth().login({username:email,password});
+      const token = `${data.token_type} ${data.access_token}`
+      localStorage.setItem("token", token);
+      dispatch(loggedIn());
+    }catch(err){
+      dispatch(authError(err.response.data.message));
+    }
 }
+
 
 export function setAuthorizationToken(token) {
   if (token) {
@@ -77,6 +86,31 @@ export function authError(error) {
     type: AUTH_ERROR,
     payload: error
   };
+}
+
+export function loggingIn() {
+  return {
+    type: LOGGING
+  };
+}
+
+export const loggedIn = () => async dispatch => {
+  await dispatch(authUser());
+  dispatch({
+    type: LOGIN
+  });
+}
+
+export const authUser = () =>async dispatch => {
+  try{
+    const user = await new Auth().user();
+    dispatch({
+      type:AUTH_USER,
+      payload:user.data
+    });
+  }catch(err){
+    console.log(err);
+  }
 }
 
 export const createGroup = group => {

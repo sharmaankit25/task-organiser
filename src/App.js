@@ -11,6 +11,7 @@ function App() {
     // Set auth token in axios
     store.dispatch({type:LOGIN});
   }
+  
   return (
     <Provider store={store}>
       <Router>

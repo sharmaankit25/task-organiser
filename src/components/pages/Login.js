@@ -1,19 +1,29 @@
-import React,{useState} from "react";
+import React,{useState,useEffect} from "react";
 import { connect } from "react-redux";
 import { login } from "../../actions/index";
 
-const Login = ({ login,history }) => {
+const Login = ({ login,error,history,authenticated }) => {
   const [credentials,setCredentials] = useState({
     email:"",
     password:""
   });
 
+  useEffect(() => {
+    redirect();
+  });
+
   const authenticate = evt => {
     evt.preventDefault();
     login(credentials);
-    history.push('/');
+    redirect();
   };
-  
+
+  const redirect = () => {
+    if(authenticated){
+      history.push('/');
+    }
+  }
+
   return (
     <div className="section">
       <form onSubmit={authenticate}>
@@ -43,6 +53,7 @@ const Login = ({ login,history }) => {
           </p>
         </div>
         <div className="field">
+          <p className="help is-danger">{error || ""}</p>
           <p className="control">
             <button className="button is-success">Login</button>
           </p>
@@ -51,7 +62,15 @@ const Login = ({ login,history }) => {
     </div>
   );
 };
+
+const mapStateToProps = ({auth:{error,authenticated}}) => {
+  return {
+    error,
+    authenticated
+  }
+}
+
 export default connect(
-  null,
+  mapStateToProps,
   { login }
 )(Login);
