@@ -15,6 +15,12 @@ export default class Auth {
         return response;
     }
 
+    set_token(){
+        if(localStorage.token){
+           axios.defaults.headers.common['Authorization'] = localStorage.token;
+        }
+    }
+
     user(){
         const res = axios.get('/user');
         return res;

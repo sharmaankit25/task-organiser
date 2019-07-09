@@ -6,21 +6,21 @@ import { Provider } from "react-redux";
 import Navbar from "./components/Navbar"
 import routes from "./routes";
 import store from "./store";
-import { loadGroups, loadMembers, loadTasks,loggedIn } from "./actions/index";
-if(localStorage.token){
-  store.dispatch(loggedIn());
-}
-function App() {
-  useEffect(()=>{
-    async function fetchData() {
-      // You can await here
-      await store.dispatch(loadGroups());
-      await store.dispatch(loadMembers());
-      await store.dispatch(loadTasks());
-      // ...
-    }
-    fetchData();
+import { loggedIn,loadGroups,loadMembers,loadTasks } from "./actions/index";
 
+function App() {
+  
+  useEffect(()=>{
+    
+    async function fetchData() {
+        await store.dispatch(loggedIn());
+        // await store.dispatch(loadGroups());
+        // await store.dispatch(loadMembers());
+        // await store.dispatch(loadTasks());
+    }
+    if(localStorage.token){
+      fetchData();
+    }
   },[]);
 
   return (

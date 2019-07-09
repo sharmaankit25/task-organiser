@@ -70,6 +70,7 @@ export const login = ({ email, password }) => async dispatch =>{
       const {data} = await new Auth().login({username:email,password});
       const token = `${data.token_type} ${data.access_token}`
       localStorage.setItem("token", token);
+      new Auth().set_token();
       dispatch(loggedIn());
     }catch(err){
       dispatch(authError(err.response.data.message));
@@ -102,6 +103,9 @@ export const loggedIn = () => dispatch => {
   dispatch({
     type: LOGIN
   });
+  dispatch(loadGroups());
+  dispatch(loadMembers());
+  dispatch(loadTasks());
 }
 
 export const authUser = () =>async dispatch => {

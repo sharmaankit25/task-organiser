@@ -1,12 +1,9 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Todo from "./Todo";
 import { connect } from "react-redux";
-import { loadTasks } from "../actions/index";
 import filterTasks from "../selectors/tasks";
 
 const TodoList = ({ tasks, groupSlug }) => {
-  // Similar to componentDidMount and componentDidUpdate:
- 
   return (
     <div className="section">
       <h3 className="subtitle">Tasks</h3>
