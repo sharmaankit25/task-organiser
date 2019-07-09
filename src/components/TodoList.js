@@ -4,13 +4,9 @@ import { connect } from "react-redux";
 import { loadTasks } from "../actions/index";
 import filterTasks from "../selectors/tasks";
 
-const TodoList = ({ tasks, loadTasks, groupSlug }) => {
+const TodoList = ({ tasks, groupSlug }) => {
   // Similar to componentDidMount and componentDidUpdate:
-  useEffect(() => {
-    if (tasks.length <= 0) {
-      loadTasks();
-    }
-  });
+ 
   return (
     <div className="section">
       <h3 className="subtitle">Tasks</h3>
@@ -38,5 +34,4 @@ const mapStateToProps = ({ tasks }) => {
 
 export default connect(
   mapStateToProps,
-  { loadTasks }
 )(TodoList);

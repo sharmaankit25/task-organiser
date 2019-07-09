@@ -16,7 +16,7 @@ const GroupDetails = ({ match:{params:{slug}},groups,members }) => {
 
   return (
     <section className="section">
-      <h2 className="title">{group.title}</h2>
+      <h2 className="title">{group ? group.title : ""}</h2>
       <button
         onClick={toggleCreateTaskFrom}
         className={

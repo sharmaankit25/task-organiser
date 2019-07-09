@@ -20,6 +20,11 @@ export default class Auth {
         return res;
     }
 
+    user_contacts(){
+        const res = axios.get('/user/contacts');
+        return res;
+    }
+
     async refresh_token(){
 
     }

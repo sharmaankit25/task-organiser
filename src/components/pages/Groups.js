@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { connect } from "react-redux";
-import { createGroup, loadGroups, updateGroup ,loadMembers } from "../../actions/index";
+import { createGroup, updateGroup  } from "../../actions/index";
 import { NavLink as Link } from "react-router-dom";
 
-const Groups = ({ createGroup,updateGroup, groups, members, loadMembers, loadGroups }) => {
+const Groups = ({ createGroup,updateGroup, groups, members }) => {
   const initGroupState = {
     title: "",
     description: "",
@@ -15,12 +15,6 @@ const Groups = ({ createGroup,updateGroup, groups, members, loadMembers, loadGro
     type:"create",
     status:false
   })
-
-  useEffect(() => {
-    if (!members.length) {
-      loadMembers();
-    }
-  });
 
   const addGroup = evt => {
     evt.preventDefault();
@@ -156,5 +150,5 @@ const mapStateToProps = ({ groups, members }) => {
 
 export default connect(
   mapStateToProps,
-  { createGroup, loadGroups, loadMembers,updateGroup }
+  { createGroup,updateGroup }
 )(Groups);

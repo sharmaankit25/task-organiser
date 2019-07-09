@@ -1,17 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { connect } from "react-redux";
-import { addMember, loadMembers } from "../../actions/index";
+import { addMember } from "../../actions/index";
 import MembersList from "../MembersList"
 
-const Members = ({ addMember, members, loadMembers }) => {
+const Members = ({ addMember, members }) => {
   const [member, setMember] = useState({
     name: ""
-  });
-
-  useEffect(() => {
-    if (!members.length) {
-      loadMembers();
-    }
   });
 
   const handleAddMember = evt => {
@@ -64,5 +58,5 @@ const mapStateToProps = ({ members,groups }) => {
 
 export default connect(
   mapStateToProps,
-  { addMember, loadMembers }
+  { addMember }
 )(Members);

@@ -7,8 +7,10 @@ import {
   AUTH_ERROR,
   ADD_GROUP,
   ADD_MEMBER,
+  LOADING_GROUPS,
   LOAD_GROUPS,
   LOAD_MEMBERS,
+  LOADING_MEMBERS,
   UPDATE_GROUP,
   LOGGING,
   AUTH_USER
@@ -129,6 +131,7 @@ export const updateGroup = group => {
 };
 
 export const loadGroups = () => async dispatch => {
+  dispatch({type:LOADING_GROUPS});
   try{
     const groups = await fetchAll();
     dispatch({
@@ -147,18 +150,17 @@ export const addMember = member => {
   };
 };
 
-export const loadMembers = () => {
-  return {
-    type: LOAD_MEMBERS,
-    payload: [
-      {
-        id:1,
-        name: "ankit"
-      },
-      {
-        id:2,
-        name: "sarthak"
-      }
-    ]
-  };
+export const loadMembers = () => async dispatch => {
+  dispatch({
+    type: LOADING_MEMBERS,
+  });
+  try{
+    const {data} = await new Auth().user_contacts();
+    dispatch({
+      type: LOAD_MEMBERS,
+      payload:data
+    });
+  }catch(err){
+    console.log(err.response); 
+  }
 };
