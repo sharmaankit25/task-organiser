@@ -8,9 +8,15 @@ const Login = ({ login,error,history,authenticated }) => {
     password:""
   });
 
+  const redirect = () => {
+    if(authenticated){
+      history.push('/');
+    }
+  }
+
   useEffect(() => {
-    redirect();
-  });
+    return () => redirect();
+  },[redirect]);
 
   const authenticate = evt => {
     evt.preventDefault();
@@ -18,11 +24,7 @@ const Login = ({ login,error,history,authenticated }) => {
     redirect();
   };
 
-  const redirect = () => {
-    if(authenticated){
-      history.push('/');
-    }
-  }
+  
 
   return (
     <div className="section">

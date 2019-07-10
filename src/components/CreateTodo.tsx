@@ -41,7 +41,7 @@ const CreateTodo:FC<IProps> = ({ addTask,groupSlug,members,visibility }) => {
     setTask(initialState);
     visibility = false;
   };
-  console.log(task.assignee);
+  
   return (
     visibility ?
     <>

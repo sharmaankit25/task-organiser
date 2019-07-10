@@ -9,19 +9,14 @@ import store from "./store";
 import { loggedIn,loadGroups,loadMembers,loadTasks } from "./actions/index";
 
 function App() {
-  
   useEffect(()=>{
-    
     async function fetchData() {
         await store.dispatch(loggedIn());
-        // await store.dispatch(loadGroups());
-        // await store.dispatch(loadMembers());
-        // await store.dispatch(loadTasks());
     }
     if(localStorage.token){
       fetchData();
     }
-  },[]);
+  },[store]);
 
   return (
     <Provider store={store}>
