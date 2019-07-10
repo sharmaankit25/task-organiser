@@ -5,15 +5,19 @@ export default function(ComposedComponent) {
   class Auth extends Component {
     componentDidMount() {
       const { history } = this.props;
-      if (!this.props.authenticated) {
-        history.push('/login');
+      if(!localStorage.token){
+        if (!this.props.authenticated) {
+          history.push('/login');
+        }
       }
     }
 
     componentWillUpdate(nextProps) {
       const { history } = this.props;
-      if (!nextProps.authenticated) {
-        history.push('/login');
+      if(!localStorage.token){
+        if (!nextProps.authenticated) {
+          history.push('/login');
+        }
       }
     }
 

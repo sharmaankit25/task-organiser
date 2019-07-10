@@ -6,7 +6,7 @@ import { Provider } from "react-redux";
 import Navbar from "./components/Navbar"
 import routes from "./routes";
 import store from "./store";
-import { loggedIn,loadGroups,loadMembers,loadTasks } from "./actions/index";
+import { loggedIn } from "./actions/index";
 
 function App() {
   useEffect(()=>{

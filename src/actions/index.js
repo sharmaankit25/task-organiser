@@ -99,14 +99,13 @@ export function loggingIn() {
 }
 
 export const loggedIn = () => dispatch => {
+  dispatch({
+    type: LOGIN
+  });
   dispatch(authUser());
   dispatch(loadGroups());
   dispatch(loadMembers());
   dispatch(loadTasks());
-  dispatch({
-    type: LOGIN
-  });
-  
 }
 
 export const authUser = () =>async dispatch => {
