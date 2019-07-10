@@ -16,7 +16,7 @@ function App() {
     if(localStorage.token){
       fetchData();
     }
-  },[store]);
+  },[]);
 
   return (
     <Provider store={store}>
