@@ -20,18 +20,22 @@ import Auth from '../apis/Auth'
 import {fetchAll} from '../apis/GroupsApi'
 import TasksApi from '../apis/TasksApi'
 // Create a new Task
-export const addTask = task => {
-  return {
-    type: ADD_TASK,
-    payload: task
-  };
+export const addTask = task => async dispatch => {
+  try{
+    const {data} = await new TasksApi().create(task)
+    dispatch({
+      type: ADD_TASK,
+      payload: data.data
+    })
+  }catch(err){
+    console.log(err)
+  }
 };
 
 // Load Tasks async
 export const loadTasks = () => async dispatch => {
   try{
-    const {data} = await new TasksApi().getAllTasks()
-    console.log(data.data);
+    const {data} = await new TasksApi().getAll()
     dispatch({
       type: LOAD_TASKS,
       payload: data.data
@@ -65,14 +69,6 @@ export const login = ({ email, password }) => async dispatch =>{
     }catch(err){
       dispatch(authError(err.response.data.message));
     }
-}
-
-
-export function setAuthorizationToken(token) {
-  if (token) {
-    // localStorage.setItem("token", token);
-    // Settings in axios as well
-  }
 }
 
 export function authError(error) {
