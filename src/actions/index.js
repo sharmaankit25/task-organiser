@@ -18,6 +18,7 @@ import {
 
 import Auth from '../apis/Auth'
 import {fetchAll} from '../apis/GroupsApi'
+import TasksApi from '../apis/TasksApi'
 // Create a new Task
 export const addTask = task => {
   return {
@@ -27,28 +28,17 @@ export const addTask = task => {
 };
 
 // Load Tasks async
-export const loadTasks = () => {
-  return {
-    type: LOAD_TASKS,
-    payload: [
-      {
-        assignee: "ankit",
-        dueDate: "2019-05-17",
-        repeat: "once",
-        title: "Fetched async from server",
-        isCompleted: false,
-        groupSlug: "office"
-      },
-      {
-        assignee: "ankit",
-        dueDate: "2019-05-16",
-        repeat: "once",
-        title: "Go out on a holiday",
-        isCompleted: false,
-        groupSlug: "family"
-      }
-    ]
-  };
+export const loadTasks = () => async dispatch => {
+  try{
+    const {data} = await new TasksApi().getAllTasks()
+    console.log(data.data);
+    dispatch({
+      type: LOAD_TASKS,
+      payload: data.data
+    })
+  }catch(err){
+    console.log(err);
+  }
 };
 
 export const toggleTaskStatus = task => {
@@ -99,12 +89,11 @@ export function loggingIn() {
 }
 
 export const loggedIn = () => dispatch => {
+  dispatch(authUser());
   dispatch({
     type: LOGIN
   });
-  dispatch(authUser());
   dispatch(loadGroups());
-  dispatch(loadMembers());
   dispatch(loadTasks());
 }
 
@@ -142,6 +131,7 @@ export const loadGroups = () => async dispatch => {
       type: LOAD_GROUPS,
       payload:groups.data.data
     });
+    dispatch(loadMembers());
   }catch(err){
     console.log(err.response);
   }
