@@ -1,9 +1,9 @@
 import React from "react";
 import { connect } from "react-redux";
 import { toggleTaskStatus } from "../actions/index";
-const Todo = ({ title, isCompleted, toggleTaskStatus, dueDate }) => {
+const Todo = ({ id,title, isCompleted, toggleTaskStatus, dueDate }) => {
   const toggleTask = evt => {
-    toggleTaskStatus({ title });
+    toggleTaskStatus({ id });
   };
 
   return (

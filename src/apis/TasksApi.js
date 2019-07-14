@@ -22,7 +22,12 @@ export default class TasksApi {
         return response;
     }
 
-    update(task,{}){
+    update(task){
+       
+    }
 
+    toggleStatus({id}){
+        const response = axios.patch(`/tasks/${id}`)
+        return response;
     }
 }

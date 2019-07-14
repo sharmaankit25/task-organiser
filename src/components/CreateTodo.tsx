@@ -29,7 +29,7 @@ const CreateTodo:FC<IProps> = ({ addTask,groupSlug,members,visibility }) => {
     title: "",
     assignee: [],
     dueDate: today,
-    repeat: "",
+    repeat: "one-time",
     isCompleted: false,
     groupSlug:groupSlug?groupSlug:""
   };
@@ -41,7 +41,7 @@ const CreateTodo:FC<IProps> = ({ addTask,groupSlug,members,visibility }) => {
     setTask(initialState);
     visibility = false;
   };
-  
+
   return (
     visibility ?
     <>
@@ -65,8 +65,8 @@ const CreateTodo:FC<IProps> = ({ addTask,groupSlug,members,visibility }) => {
           <label className="label">Assignee</label>
           <div className="control">
           <div className="select is-multiple ">
-          <select multiple
-          value={task.assignee.length > 0 ? task.assignee.toString() : ""} 
+          <select multiple={true}
+          value={task.assignee.length > 0 ? task.assignee.toString() : ""}
           onChange={e => setTask({ ...task, assignee:Array.from(e.target.selectedOptions,option => Number(option.value))}) } className="input is-info select">
           {members.map(member=><option key={member.id} value={member.id}>{member.name}</option>)}
           </select>

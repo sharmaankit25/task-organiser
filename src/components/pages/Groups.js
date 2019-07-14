@@ -21,7 +21,6 @@ const Groups = ({ createGroup,updateGroup, groups, members }) => {
     if(groupForm.type === "create"){
       createGroup(group);
     }else{
-      console.log("Edit Group")
       updateGroup(group);
     }
     setGroupForm({...groupForm,type:"create",status:false})
@@ -38,7 +37,7 @@ const Groups = ({ createGroup,updateGroup, groups, members }) => {
     <div className="is-clearfix">
       <div className="is-pulled-right ">
           {groupForm.status === false ? 
-          <button className="button is-primary" onClick={e => setGroupForm({...groupForm,type:"create",status:true})}>Create New</button> :
+          <button className="button is-primary" onClick={e => setGroupForm({...groupForm,type:"create",status:true})}>Create New &nbsp;  <i className="fas fa-plus"></i></button> :
           ""}
       </div>
     </div>
@@ -69,7 +68,7 @@ const Groups = ({ createGroup,updateGroup, groups, members }) => {
           <div className="box">
           <div className="is-pulled-right column">
           {groupForm.status === true ? 
-          <button onClick={e=>setGroupForm({...groupForm,type:"create",status:false})}>Close</button> :
+          <button className="delete is-large" onClick={e=>setGroupForm({...groupForm,type:"create",status:false})}>Close</button> :
           ""
         }
       </div>

@@ -45,11 +45,16 @@ export const loadTasks = () => async dispatch => {
   }
 };
 
-export const toggleTaskStatus = task => {
-  return {
-    type: TOGGLE_TASK_STATUS,
-    payload: task
-  };
+export const toggleTaskStatus = task => async dispatch =>{
+  try{
+    const {data} = await new TasksApi().toggleStatus(task)
+    dispatch({
+      type: TOGGLE_TASK_STATUS,
+      payload: data.data
+    })
+  }catch(err){
+    console.log(err);
+  }
 };
 
 export function logout() {

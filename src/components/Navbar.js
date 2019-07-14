@@ -33,7 +33,7 @@ const Navbar = ({ auth,user }) => {
 
         <button
           onClick={toggleNav}
-          className={`navbar-burger ${active}`}
+          className={`button is-white navbar-burger ${active}`}
         >
           <span aria-hidden="true" />
           <span aria-hidden="true" />
