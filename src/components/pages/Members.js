@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
-import { addMember } from "../../actions/index";
+import { addMember,searchMember } from "../../actions/index";
 import MembersList from "../MembersList"
 
 const Members = ({ addMember, members }) => {
@@ -8,10 +8,22 @@ const Members = ({ addMember, members }) => {
     name: ""
   });
 
-  const handleAddMember = evt => {
+  const handleAddMember = async evt => {
     evt.preventDefault();
-    addMember(member);
+    try{
+      const search = await searchMember(member.name);
+      if(search.data.data){
+        addMember(search.data.data);
+      }
+    }catch(err){
+      console.log(err);
+    }
   };
+
+  const handleOnChangeMember = (e) => {
+    setMember({ ...member, name: e.target.value });
+  }
+
 
   return (
     <section className="section">
@@ -31,7 +43,7 @@ const Members = ({ addMember, members }) => {
                   <input
                     value={member.name}
                     onChange={e =>
-                      setMember({ ...member, name: e.target.value })
+                      handleOnChangeMember(e)
                     }
                     className="input is-info"
                     type="text"

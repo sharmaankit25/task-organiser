@@ -8,7 +8,7 @@ import MembersList from "../MembersList"
 const GroupDetails = ({ match:{params:{slug}},groups,members }) => {
   const [todoFormStatus, setTodoFormStatus] = useState(false);
   const group = groupFilter(groups,{slug});
-  const group_members = members.filter(member=>group.members.includes(member.id));
+  const group_members = members.filter(member=>group.members.includes(member.id) && member.status);
   const toggleCreateTaskFrom = evt => {
     evt.preventDefault();
     setTodoFormStatus(!todoFormStatus);

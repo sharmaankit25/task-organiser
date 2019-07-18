@@ -19,6 +19,7 @@ import {
 import Auth from '../apis/Auth'
 import GroupsApi from '../apis/GroupsApi'
 import TasksApi from '../apis/TasksApi'
+import MembersApi from '../apis/MembersApi'
 // Create a new Task
 export const addTask = task => async dispatch => {
   try{
@@ -148,11 +149,21 @@ export const loadGroups = () => async dispatch => {
   }
 };
 
-export const addMember = member => {
-  return {
-    type: ADD_MEMBER,
-    payload: member
-  };
+export const addMember = member => async dispatch => {
+  try{
+    await new MembersApi().follow(member);
+    dispatch({
+      type: ADD_MEMBER,
+      payload: member
+    })
+  }catch(err){
+    console.log(err);
+  }
+  
+};
+
+export const searchMember = async query => {
+  return await new MembersApi().search(query);
 };
 
 export const loadMembers = () => async dispatch => {
@@ -163,7 +174,7 @@ export const loadMembers = () => async dispatch => {
     const {data} = await new Auth().user_contacts();
     dispatch({
       type: LOAD_MEMBERS,
-      payload:data
+      payload:data.data
     });
   }catch(err){
     console.log(err.response); 

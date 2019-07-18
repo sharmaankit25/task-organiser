@@ -121,9 +121,9 @@ const Groups = ({ createGroup,updateGroup, groups, members }) => {
                   <div className="select is-multiple ">
                     <select value={group.members} multiple onChange={(e)=>setGroup({ ...group, members:Array.from(e.target.selectedOptions,option => Number(option.value)) })}>
                       {members.map(member => (
-                        <option key={member.id} value={member.id}>
+                        (member.status) ? <option key={member.id} value={member.id}>
                           {member.name}
-                        </option>
+                        </option> : ""
                       ))}
                     </select>
                   </div>
