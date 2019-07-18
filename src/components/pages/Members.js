@@ -1,22 +1,38 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { connect } from "react-redux";
-import { addMember,searchMember } from "../../actions/index";
+import { addMember,searchMember,loadInvitations,acceptInvite,rejectInvite } from "../../actions/index";
 import MembersList from "../MembersList"
+import { throws } from "assert";
 
 const Members = ({ addMember, members }) => {
+
+  useEffect(() => {
+    async function fetchData() {
+      const invitations = await loadInvitations()
+      setInvitations(invitations.data.data);
+    }
+    fetchData();
+  }, [])
+
+  const [invitations,setInvitations] = useState([])
+  const [error,setError] = useState("");
+
   const [member, setMember] = useState({
     name: ""
   });
 
   const handleAddMember = async evt => {
     evt.preventDefault();
+    
     try{
-      const search = await searchMember(member.name);
-      if(search.data.data){
-        addMember(search.data.data);
+      const {data} = await searchMember(member.name);
+      if(data.id){
+        addMember(data);
+      }else{
+        throws("Not Found")
       }
     }catch(err){
-      console.log(err);
+      setError("No user found with this email");
     }
   };
 
@@ -24,6 +40,17 @@ const Members = ({ addMember, members }) => {
     setMember({ ...member, name: e.target.value });
   }
 
+  const acceptInvitation = async (id) =>{
+    await acceptInvite(id);
+    const invitations = await loadInvitations()
+    setInvitations(invitations.data.data);
+  }
+
+  const rejectInvitation = async (id) =>{
+    await rejectInvite(id)
+    const invitations = await loadInvitations()
+    setInvitations(invitations.data.data)
+  }
 
   return (
     <section className="section">
@@ -31,6 +58,21 @@ const Members = ({ addMember, members }) => {
         <div className="column">
           <h1 className="title">Members List</h1>
           <MembersList members={members}/>
+          {(invitations.length) ? <h1 className="title">Requests/Invitations</h1>: ""}
+          {
+            invitations.map(member => (
+            <div key={member.id} className="box">
+            {member.name} {"  "}
+            {member.status ? 
+            <i className="fas fa-check"></i> :
+            <div className="is-pulled-right">
+            <button onClick={e=>acceptInvitation(member.id)} className="button is-default">Accept</button>
+            <button onClick={e=>rejectInvitation(member.id)} className="button is-default">Reject</button>
+            </div>
+            }
+            </div>
+          ))
+        }
         </div>
         <div className="column">
           <h1 className="title">Create Member</h1>
@@ -50,6 +92,7 @@ const Members = ({ addMember, members }) => {
                     placeholder="Enter name or email or phone"
                   />
                 </div>
+                {error}
               </div>
 
               <button className="button is-primary">Create</button>

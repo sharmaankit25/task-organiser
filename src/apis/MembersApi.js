@@ -2,13 +2,29 @@ import axios from 'axios'
 
 export default class MembersApi {
     
-    search(query){
-        const res = axios.get(`/user/search?q=${query}`)
-        return res;
+    async search(query){
+        try{
+            const {data} = await axios.get(`/user/search?q=${query}`)
+            return data;
+        }catch(err){
+            return err;
+        }
     }
 
     follow({id}){
         return axios.get(`/user/follow/${id}`);
+    }
+
+    invitations(){
+        return axios.get(`user/invitations`);
+    }
+
+    acceptInvite(id){
+        return axios.get(`user/follow/${id}/accept`);
+    }
+
+    rejectInvite(id){
+        return axios.get(`user/follow/${id}/reject`);
     }
     
     getAll(){

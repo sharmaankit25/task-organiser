@@ -180,3 +180,15 @@ export const loadMembers = () => async dispatch => {
     console.log(err.response); 
   }
 };
+
+export const loadInvitations = async () =>{
+  return new MembersApi().invitations();
+}
+
+export const acceptInvite = async (id) =>{
+  return new MembersApi().acceptInvite(id);
+}
+
+export const rejectInvite = async (id) =>{
+  return new MembersApi().rejectInvite(id);
+}

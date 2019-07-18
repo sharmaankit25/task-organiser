@@ -6,15 +6,14 @@ interface IProps {
 }
 
 
-const MembersList:FC<IProps> = ({members}) => 
-     (
+const MembersList:FC<IProps> = ({members}) => (
         members.map((member:Member) => (
             <div key={member.id} className="box">
                 {member.name} {"  "}
-                {(member.status ? <i className="fas fa-check"></i> : '' )}
+                {(member.status || <div className="is-pulled-right"><i className="fas fa-u">Waiting for Approval</i></div> )}
             </div>
         ))
-    );
+);
 
 
 export default MembersList;
