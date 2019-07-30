@@ -24,14 +24,19 @@ import MembersApi from '../apis/MembersApi'
 export const addTask = task => async dispatch => {
   try{
     const {data} = await new TasksApi().create(task)
-    dispatch({
-      type: ADD_TASK,
-      payload: data.data
-    })
+    dispatch(addTaskToReducer(data.data))
   }catch(err){
     console.log(err)
   }
 };
+
+export const addTaskToReducer = (task) => {
+  console.log("Adding task to reducer",task)
+  return {
+    type: ADD_TASK,
+    payload: task
+  }
+}
 
 // Load Tasks async
 export const loadTasks = () => async dispatch => {
@@ -159,7 +164,6 @@ export const addMember = member => async dispatch => {
   }catch(err){
     console.log(err);
   }
-  
 };
 
 export const searchMember = async query => {

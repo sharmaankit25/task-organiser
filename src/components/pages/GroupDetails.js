@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import CreateTodos from "../CreateTodo";
 import TasksList from "../TodoList";
 import { connect } from "react-redux";
 import groupFilter from "../../selectors/groups"
 import MembersList from "../MembersList"
+import TaskSocket from "../../sockets/TaskSocket";
+import {addTaskToReducer} from "../../actions/index"
 
-const GroupDetails = ({ match:{params:{slug}},groups,members }) => {
+const GroupDetails = ({ match:{params:{slug}},groups,members,addTaskToReducer }) => {
   const [todoFormStatus, setTodoFormStatus] = useState(false);
   const group = groupFilter(groups,{slug});
   const group_members = members.filter(member=>group.members.includes(member.id) && member.status);
@@ -13,6 +15,17 @@ const GroupDetails = ({ match:{params:{slug}},groups,members }) => {
     evt.preventDefault();
     setTodoFormStatus(!todoFormStatus);
   };
+
+  useEffect(() => {
+    function registerSocket() {
+      new TaskSocket().taskCreated(group.id).listen("TaskCreatedEvent", (e) => {
+        addTaskToReducer(e.task);
+      });
+    }
+    if(group){
+      registerSocket();
+    }
+  }, [group,addTaskToReducer])
 
   return (
     <section className="section">
@@ -46,5 +59,6 @@ const mapStateToProps = ({ groups, members }) => {
 
 export default connect(
   mapStateToProps,
+  {addTaskToReducer}
 )(GroupDetails);
 
