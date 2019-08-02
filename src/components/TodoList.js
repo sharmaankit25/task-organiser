@@ -7,7 +7,7 @@ const TodoList = ({ tasks, groupSlug }) => {
   return (
     <div className="section">
       <h3 className="subtitle">Tasks</h3>
-      <div className="columns is-multiple">
+      <div className="columns is-mobile">
         <div className="column card">
           <label className="label">Todo</label>
           {filterTasks(tasks, { isCompleted: false, groupSlug }).map(task => (

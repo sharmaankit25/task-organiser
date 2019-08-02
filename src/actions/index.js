@@ -20,6 +20,7 @@ import Auth from '../apis/Auth'
 import GroupsApi from '../apis/GroupsApi'
 import TasksApi from '../apis/TasksApi'
 import MembersApi from '../apis/MembersApi'
+import TaskSocket from "../sockets/TaskSocket"
 // Create a new Task
 export const addTask = task => async dispatch => {
   try{
@@ -110,6 +111,9 @@ export const authUser = () =>async dispatch => {
     dispatch({
       type:AUTH_USER,
       payload:user.data
+    });
+    await new TaskSocket().taskCreated(user.data.id).listen("TaskCreatedEvent", (e) => {
+      dispatch(addTaskToReducer(e.task));
     });
   }catch(err){
     console.log(err);
