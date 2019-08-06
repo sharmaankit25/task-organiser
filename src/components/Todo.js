@@ -1,13 +1,14 @@
 import React from "react";
 import { connect } from "react-redux";
 import { toggleTaskStatus } from "../actions/index";
+import {useSpring, animated} from 'react-spring'
 const Todo = ({ id,title, isCompleted, toggleTaskStatus, dueDate }) => {
   const toggleTask = evt => {
     toggleTaskStatus({ id });
   };
-
+  const animationProps = useSpring({opacity: 1,delay: 600, from: {opacity: 0}})
   return (
-    <div className="box has-background-light ">
+    <animated.div style={animationProps} className="box has-background-light ">
       <label className="checkbox">
         <input type="checkbox" onChange={toggleTask} checked={isCompleted} />{" "}
         <span className="subtitle">{title}</span>
@@ -17,7 +18,7 @@ const Todo = ({ id,title, isCompleted, toggleTaskStatus, dueDate }) => {
           {dueDate}
         </time>
       </div>
-    </div>
+    </animated.div>
   );
 };
 

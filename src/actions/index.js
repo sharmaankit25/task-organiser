@@ -13,7 +13,8 @@ import {
   LOADING_MEMBERS,
   UPDATE_GROUP,
   LOGGING,
-  AUTH_USER
+  AUTH_USER,
+  ADD_LABEL
 } from "./types";
 
 import Auth from '../apis/Auth'
@@ -199,4 +200,12 @@ export const acceptInvite = async (id) =>{
 
 export const rejectInvite = async (id) =>{
   return new MembersApi().rejectInvite(id);
+}
+
+export const createLabel = label => {
+  return {
+    type:ADD_LABEL,
+    payload:label
+
+  }
 }

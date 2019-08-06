@@ -4,6 +4,7 @@ import TasksList from "../TodoList";
 import { connect } from "react-redux";
 import groupFilter from "../../selectors/groups"
 import MembersList from "../MembersList"
+import AddLabel from "../organisms/AddLabel"
 
 const GroupDetails = ({ match:{params:{slug}},groups,members }) => {
   const [todoFormStatus, setTodoFormStatus] = useState(false);
@@ -28,6 +29,7 @@ const GroupDetails = ({ match:{params:{slug}},groups,members }) => {
         {todoFormStatus ? "Close" : "Create New Task"}
       </button>
       <CreateTodos visibility={todoFormStatus} groupSlug={slug} members={group_members} />
+      <AddLabel groupSlug={slug}/>
       <TasksList groupSlug={slug} />
       <div className="section">
       <h3 className="subtitle">Members</h3>

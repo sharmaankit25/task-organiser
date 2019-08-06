@@ -15,6 +15,12 @@ export const ADD_MEMBER = "ADD_MEMBER";
 export const LOAD_MEMBERS = "LOAD_MEMBERS";
 export const LOADING_MEMBERS = "LOADING_MEMBERS";
 
+
+// Label
+export const ADD_LABEL = "ADD_LABEL";
+// export const LOAD_MEMBERS = "LOAD_MEMBERS";
+// export const LOADING_MEMBERS = "LOADING_MEMBERS";
+
 // Login
 export const LOGIN = "LOGIN";
 export const LOGOUT = "LOGOUT";

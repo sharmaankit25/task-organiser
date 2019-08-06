@@ -3,12 +3,14 @@ import tasks from "./tasks";
 import auth from "./auth";
 import groups from "./groups";
 import members from "./members";
+import labels from "./labels";
 import {LOGOUT} from "../actions/types"
 const appReducer = combineReducers({
   tasks,
   auth,
   groups,
-  members
+  members,
+  labels
 });
 
 const rootReducer = (state, action) => {
