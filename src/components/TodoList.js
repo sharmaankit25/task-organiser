@@ -14,8 +14,8 @@ const TodoList = ({ tasks, groupSlug,labels }) => {
       <div className="columns is-mobile">
         <div className="column card">
           <label className="label">Todo</label>
-          {filterTasks(tasks, { isCompleted: false, groupSlug }).map(task => (
-            <Todo key={task.title} {...task} />
+          {filterTasks(tasks, { isCompleted: false, groupSlug }).map((task,i) => (
+            <Todo index={i} key={task.title} {...task} />
           ))}
         </div>
         {
@@ -28,8 +28,8 @@ const TodoList = ({ tasks, groupSlug,labels }) => {
         }
         <div className="column card">
           <label className="label">Completed</label>
-          {filterTasks(tasks, { isCompleted: true, groupSlug }).map(task => (
-            <Todo key={task.title} {...task} />
+          {filterTasks(tasks, { isCompleted: true, groupSlug }).map((task,i) => (
+            <Todo index={i} key={task.title} {...task} />
           ))}
         </div>
       </div>

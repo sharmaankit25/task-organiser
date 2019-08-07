@@ -2,13 +2,14 @@ import React from "react";
 import { connect } from "react-redux";
 import { toggleTaskStatus } from "../actions/index";
 import {useSpring, animated} from 'react-spring'
-const Todo = ({ id,title, isCompleted, toggleTaskStatus, dueDate }) => {
+import TaskDetail from "../components/organisms/TaskDetail"
+const Todo = ({ id,title,index,isCompleted,toggleTaskStatus,dueDate }) => {
   const toggleTask = evt => {
     toggleTaskStatus({ id });
   };
-  const animationProps = useSpring({opacity: 1,delay: 600, from: {opacity: 0}})
+  const animationProps = useSpring({opacity: 1,delay: 250*index, from: {opacity: 0}})
   return (
-    <animated.div style={animationProps} className="box has-background-light ">
+    <animated.div onClick={e=>console.log("Open Popup")} style={animationProps} className="box has-background-light ">
       <label className="checkbox">
         <input type="checkbox" onChange={toggleTask} checked={isCompleted} />{" "}
         <span className="subtitle">{title}</span>

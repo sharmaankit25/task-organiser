@@ -16,8 +16,8 @@ const Dashboard = ({ tasks }) => {
         {filterTasks(tasks, {
           isCompleted: false,
           dueDate: currentDate
-        }).map(task => (
-          <Todo key={task.title} {...task} />
+        }).map((task,i) => (
+          <Todo index={i} key={task.title} {...task} />
         ))}
       </div>
     </div>
