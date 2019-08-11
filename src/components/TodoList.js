@@ -12,8 +12,12 @@ const TodoList = ({ tasks, groupSlug,labels,toggleTaskStatus }) => {
   const groupLabels = filterLabels(labels,{groupSlug});
   const onDragEnd = result => {
     const {destination,source,draggableId} = result;
-    if(!destination){return;}
-    if(destination.droppableId === source.droppableId && destination.index === source.index){return;}
+    if(!destination){
+      return;
+    }
+    if(destination.droppableId === source.droppableId){
+      return;
+    }
     if(destination.droppableId === "Completed" || destination.droppableId==="Backlog"){
       toggleTaskStatus({id:draggableId});
     }
@@ -32,7 +36,7 @@ const TodoList = ({ tasks, groupSlug,labels,toggleTaskStatus }) => {
         </div>
         {groupLabels.map(label=>(
             <div className="column is-narrow" key={label.label}>
-            <TaskList  title={label.label}>
+            <TaskList title={label.label}>
             Test List
             </TaskList>
             </div>

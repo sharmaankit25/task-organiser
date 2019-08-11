@@ -7,8 +7,12 @@ class Modal extends Component {
 
   close = e => {
     e.preventDefault();
-    console.log("close Pop")
     this.setState({ status: false });
+  };
+
+  open = e => {
+    e.preventDefault();
+    this.setState({ status: true });
   };
 
   componentWillReceiveProps(prop) {
@@ -16,9 +20,12 @@ class Modal extends Component {
   }
 
   render() {
+    if(!this.state.status){
+      return null
+    }
     return (
-      <div className={`modal ${this.state.status ? "is-active" : ""}`}>
-        <div className="modal-background" />
+      <div className="modal is-active">
+        <div className="modal-background"></div>
         <div className="modal-card">
           <header className="modal-card-head">
             <p className="modal-card-title">Details</p>

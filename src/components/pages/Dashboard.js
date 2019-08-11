@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import filterTasks from "../../selectors/tasks";
-import Todo from "../Todo";
+import TaskCard from "../organisms/TaskCard";
 
 const Dashboard = ({ tasks }) => {
   const currentDate = new Date().toJSON().slice(0, 10);
@@ -17,7 +17,9 @@ const Dashboard = ({ tasks }) => {
           isCompleted: false,
           dueDate: currentDate
         }).map((task,i) => (
-          <Todo index={i} key={task.title} {...task} />
+          <div className="box has-background-grey-lighter">
+          <TaskCard index={i} key={task.title} {...task} />
+          </div>
         ))}
       </div>
     </div>

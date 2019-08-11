@@ -12,6 +12,7 @@ export default class Auth {
             "password":password,
             "scope":"*"
         })
+        console.log(response);
         return response;
     }
 
@@ -32,7 +33,14 @@ export default class Auth {
     }
 
     async refresh_token(){
-
+        const response = axios.post('/oauth/token',{
+            "grant_type":"refresh_token",
+            'refresh_token':"",
+            "client_id":PASSPORT_CLIENT_ID,
+            "client_secret":PASSPORT_CLIENT_SECRET,
+            "scope":"*"
+        })
+        return response;
     }
 
     async logout(){
