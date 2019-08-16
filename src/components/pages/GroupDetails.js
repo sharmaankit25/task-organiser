@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import groupFilter from "../../selectors/groups"
 import MembersList from "../MembersList"
 import AddLabel from "../organisms/AddLabel"
+import Modal from "../molecules/Modal";
 
 const GroupDetails = ({ match:{params:{slug}},groups,members }) => {
   const [todoFormStatus, setTodoFormStatus] = useState(false);
@@ -15,21 +16,44 @@ const GroupDetails = ({ match:{params:{slug}},groups,members }) => {
     setTodoFormStatus(!todoFormStatus);
   };
 
+  
+
+  if(!group){
+    return null;
+  }
   return (
     <section className="section">
-      <h2 className="title">{group ? group.title : ""}</h2>
-      <button
-        onClick={toggleCreateTaskFrom}
-        className={
-          todoFormStatus
-            ? "is-pulled-right delete is-large"
-            : "button is-primary"
-        }
-      >
-        {todoFormStatus ? "Close" : "Create New Task"}
-      </button>
-      <CreateTodos visibility={todoFormStatus} groupSlug={slug} members={group_members} />
+      <h2 className="title">{group.title}</h2>
+      <p className="content box">{group.description}</p>
+      <nav className="level">
+      <div className="level-left">
+      <div className="level-item">
+        <p className="subtitle is-5">
+          <strong></strong>
+        </p>
+      </div>
+      <div className="level-item">
       <AddLabel groupSlug={slug}/>
+      </div>
+      </div>
+      <div className="level-right">
+        <p className="level-item"> </p>
+        <p className="level-item">
+        {!todoFormStatus ? <button
+          onClick={toggleCreateTaskFrom}
+          className="button is-primary"
+        >
+          Create New Task
+        </button> : ""}
+        </p>
+      </div>
+      </nav>
+      
+      {todoFormStatus &&
+      <Modal status={todoFormStatus} heading="Create Task" close={toggleCreateTaskFrom}>
+        <CreateTodos groupSlug={slug} members={group_members}  />
+      </Modal>
+      }
       <TasksList groupSlug={slug} />
       <div className="section">
       <h3 className="subtitle">Members</h3>

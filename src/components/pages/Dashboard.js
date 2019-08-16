@@ -17,9 +17,7 @@ const Dashboard = ({ tasks }) => {
           isCompleted: false,
           dueDate: currentDate
         }).map((task,i) => (
-          <div className="box has-background-grey-lighter">
           <TaskCard index={i} key={task.title} {...task} />
-          </div>
         ))}
       </div>
     </div>

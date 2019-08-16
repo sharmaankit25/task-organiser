@@ -5,11 +5,6 @@ class Modal extends Component {
     status: this.props.status ? this.props.status : false
   };
 
-  close = e => {
-    e.preventDefault();
-    this.setState({ status: false });
-  };
-
   open = e => {
     e.preventDefault();
     this.setState({ status: true });
@@ -25,21 +20,21 @@ class Modal extends Component {
     }
     return (
       <div className="modal is-active">
-        <div className="modal-background"></div>
+        <div className="modal-background" />>
         <div className="modal-card">
           <header className="modal-card-head">
-            <p className="modal-card-title">Details</p>
+            <p className="modal-card-title">{this.props.heading || "Details"}</p>
             <button
-              onClick={this.close}
+              onClick={this.props.close}
               className="delete"
               aria-label="close"
             />
           </header>
           <section className="modal-card-body">{this.props.children}</section>
           <footer className="modal-card-foot">
-            <button onClick={this.close} className="button">
+            {/** <button onClick={this.close} className="button">
               Close
-            </button>
+            </button>*/}
           </footer>
         </div>
       </div>

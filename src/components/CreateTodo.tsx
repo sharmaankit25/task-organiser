@@ -15,10 +15,9 @@ interface IProps {
   addTask:(task:ITask)=>void;
   groupSlug:string;
   members:any[];
-  visibility:boolean;
 }
 
-const CreateTodo:FC<IProps> = ({ addTask,groupSlug,members,visibility }) => {
+const CreateTodo:FC<IProps> = ({ addTask,groupSlug,members }) => {
     const now = new Date();
     let dd = String(now.getDate()).padStart(2, '0');
     let mm = String(now.getMonth() + 1).padStart(2, '0'); //January is 0!
@@ -39,13 +38,10 @@ const CreateTodo:FC<IProps> = ({ addTask,groupSlug,members,visibility }) => {
     evt.preventDefault();
     addTask(task);
     setTask(initialState);
-    visibility = false;
   };
 
   return (
-    visibility ?
     <>
-      <h2 className="title">Create Todo</h2>
       <form onSubmit={submitTask}>
         <div className="field">
           <label className="label">Title</label>
@@ -66,7 +62,7 @@ const CreateTodo:FC<IProps> = ({ addTask,groupSlug,members,visibility }) => {
           <div className="control">
           <div className="select is-multiple ">
           <select multiple={true}
-          value={task.assignee.length > 0 ? task.assignee.toString() : ""}
+          value={task.assignee.length > 0 ? task.assignee.toString() : []}
           onChange={e => setTask({ ...task, assignee:Array.from(e.target.selectedOptions,option => Number(option.value))}) } className="input is-info select">
           {members.map(member=><option key={member.id} value={member.id}>{member.name}</option>)}
           </select>
@@ -91,10 +87,7 @@ const CreateTodo:FC<IProps> = ({ addTask,groupSlug,members,visibility }) => {
           <label className="label">Type</label>
           <div className="control">
             <div className="select is-primary">
-              <select
-                value={task.repeat}
-                onChange={e => setTask({ ...task, repeat: e.target.value })}
-              >
+              <select value={task.repeat} onChange={e => setTask({ ...task, repeat: e.target.value })}>
                 <option value="one-time">One Time</option>
                 <option value="daily">Daily</option>
                 <option value="weekly">Weekly</option>
@@ -108,10 +101,23 @@ const CreateTodo:FC<IProps> = ({ addTask,groupSlug,members,visibility }) => {
           </div>
         </div>
 
+        <div className="field">
+          <label className="label">Priority</label>
+          <div className="control">
+            <div className="select is-primary">
+              <select value="">
+              <option value="medium">Medium</option>
+                <option value="critical">Critical</option>
+                <option value="high">High</option>                
+                <option value="low">Low</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
         <button className="button is-primary">Add +</button>
       </form>
     </>
-    : <></>
   );
 };
 
