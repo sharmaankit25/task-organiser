@@ -46,22 +46,14 @@ const Navbar = ({ auth,user }) => {
           <div className="navbar-start">
             <Link onClick={closeNav} className="navbar-item" to="/">
               Home
-            </Link>
-            <Link
-              onClick={closeNav}
-              activeClassName="is-active"
-              className="navbar-item"
-              to="/tasks"
-            >
-              Tasks
-            </Link>
+            </Link>            
             <Link
               onClick={closeNav}
               activeClassName="is-active"
               className="navbar-item"
               to="/groups"
             >
-              Groups
+              Boards
             </Link>
             <Link
               onClick={closeNav}

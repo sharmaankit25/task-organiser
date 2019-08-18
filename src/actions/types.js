@@ -1,6 +1,6 @@
 export const ADD_TASK = "ADD_TASK";
 export const LOAD_TASKS = "LOAD_TASKS";
-export const TOGGLE_TASK_STATUS = "TOGGLE_TASK_STATUS";
+export const UPDATE_TASK = "UPDATE_TASK";
 export const FILTER_TASKS = "FILTER_TASKS";
 
 // Groups
@@ -18,7 +18,7 @@ export const LOADING_MEMBERS = "LOADING_MEMBERS";
 
 // Label
 export const ADD_LABEL = "ADD_LABEL";
-// export const LOAD_MEMBERS = "LOAD_MEMBERS";
+export const LOAD_LABELS = "LOAD_LABELS";
 // export const LOADING_MEMBERS = "LOADING_MEMBERS";
 
 // Login

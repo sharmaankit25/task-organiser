@@ -21,13 +21,11 @@ export default class TasksApi {
         })
         return response;
     }
-
-    update(task){
-       
-    }
-
-    toggleStatus({id}){
-        const response = axios.patch(`/tasks/${id}`)
+   
+    update(id,{isCompleted,label_id}){        
+        const response = axios.patch(`/tasks/${id}`,{
+            isCompleted,label_id
+        })
         return response;
     }
 }

@@ -1,7 +1,7 @@
 import {
   ADD_TASK,
   LOAD_TASKS,
-  TOGGLE_TASK_STATUS,
+  UPDATE_TASK,
   LOGIN,
   LOGOUT,
   AUTH_ERROR,
@@ -14,11 +14,13 @@ import {
   UPDATE_GROUP,
   LOGGING,
   AUTH_USER,
-  ADD_LABEL
+  ADD_LABEL,
+  LOAD_LABELS
 } from "./types";
 
 import Auth from '../apis/Auth'
 import GroupsApi from '../apis/GroupsApi'
+import LabelsApi from '../apis/LabelsApi'
 import TasksApi from '../apis/TasksApi'
 import MembersApi from '../apis/MembersApi'
 import TaskSocket from "../sockets/TaskSocket"
@@ -53,11 +55,11 @@ export const loadTasks = () => async dispatch => {
   }
 };
 
-export const toggleTaskStatus = task => async dispatch =>{
+export const updateTask = (id,task) => async dispatch =>{
   try{
-    const {data} = await new TasksApi().toggleStatus(task)
+    const {data} = await new TasksApi().update(id,task)
     dispatch({
-      type: TOGGLE_TASK_STATUS,
+      type: UPDATE_TASK,
       payload: data.data
     })
   }catch(err){
@@ -202,10 +204,26 @@ export const rejectInvite = async (id) =>{
   return new MembersApi().rejectInvite(id);
 }
 
-export const createLabel = label => {
-  return {
-    type:ADD_LABEL,
-    payload:label
+export const createLabel = (group_id,label) => async dispatch => {
+  try{
+    const {data} = await new LabelsApi().create(group_id,label);
+    dispatch({
+      type:ADD_LABEL,
+      payload:data
+    });
+  }catch(err){
+    console.log(err.response);
+  }
+}
 
+export const loadLabels = group_id => async dispatch => {
+  try{
+    const labels = await new LabelsApi().getAll(group_id);
+    dispatch({
+      type: LOAD_LABELS,
+      payload:labels.data
+    });
+  }catch(err){
+    console.log(err.response);
   }
 }

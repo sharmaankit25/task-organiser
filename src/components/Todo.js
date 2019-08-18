@@ -1,6 +1,4 @@
 import React from "react";
-import { connect } from "react-redux";
-import { toggleTaskStatus } from "../actions/index";
 import TaskCard from "../components/organisms/TaskCard"
 import { Draggable } from 'react-beautiful-dnd';
 
@@ -17,7 +15,4 @@ const Todo = (task) => {
   );
 };
 
-export default connect(
-  null,
-  { toggleTaskStatus }
-)(Todo);
+export default Todo;

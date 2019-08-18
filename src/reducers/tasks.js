@@ -1,4 +1,4 @@
-import { ADD_TASK, LOAD_TASKS, TOGGLE_TASK_STATUS } from "../actions/types";
+import { ADD_TASK, LOAD_TASKS, UPDATE_TASK } from "../actions/types";
 
 export default (state = [], action) => {
   switch (action.type) {
@@ -6,10 +6,10 @@ export default (state = [], action) => {
       return [...state, action.payload];
     case LOAD_TASKS:
       return [...state, ...action.payload];
-    case TOGGLE_TASK_STATUS:
+    case UPDATE_TASK:
       return state.map(task =>
         task.title === action.payload.title
-          ? { ...task, isCompleted: !task.isCompleted }
+          ? { ...action.payload }
           : task
       );
     default:

@@ -11,16 +11,16 @@ const GroupDetails = ({ match:{params:{slug}},groups,members }) => {
   const [todoFormStatus, setTodoFormStatus] = useState(false);
   const group = groupFilter(groups,{slug});
   const group_members = members.filter(member=>group.members.includes(member.id) && member.status);
+  
   const toggleCreateTaskFrom = evt => {
     evt.preventDefault();
     setTodoFormStatus(!todoFormStatus);
   };
 
-  
-
   if(!group){
     return null;
   }
+
   return (
     <section className="section">
       <h2 className="title">{group.title}</h2>
@@ -33,7 +33,7 @@ const GroupDetails = ({ match:{params:{slug}},groups,members }) => {
         </p>
       </div>
       <div className="level-item">
-      <AddLabel groupSlug={slug}/>
+      <AddLabel groupId={group.id}/>
       </div>
       </div>
       <div className="level-right">
@@ -54,7 +54,7 @@ const GroupDetails = ({ match:{params:{slug}},groups,members }) => {
         <CreateTodos groupSlug={slug} members={group_members}  />
       </Modal>
       }
-      <TasksList groupSlug={slug} />
+      <TasksList groupSlug={slug} groupId={group.id}/>
       <div className="section">
       <h3 className="subtitle">Members</h3>
         <MembersList members={group_members} />

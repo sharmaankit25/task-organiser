@@ -1,5 +1,5 @@
-export default (labels,{groupSlug}) => {
+export default (labels,{group_id}) => {
     return labels.filter(label => {
-      return label.groupSlug === groupSlug;
+      return label.groupId === group_id;
     });
 };
