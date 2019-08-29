@@ -118,6 +118,11 @@ export const authUser = () =>async dispatch => {
     await new TaskSocket().taskCreated(user.data.id).listen("TaskCreatedEvent", (e) => {
       dispatch(addTaskToReducer(e.task));
     });
+
+    await new TaskSocket().taskUpdated(user.data.id).listen("TaskUpdatedEvent", (e) => {
+      // Update Task in reducer
+      // dispatch(addTaskToReducer(e.task));
+    });
   }catch(err){
     console.log(err);
   }
