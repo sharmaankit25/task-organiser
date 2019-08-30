@@ -58,14 +58,19 @@ export const loadTasks = () => async dispatch => {
 export const updateTask = (id,task) => async dispatch =>{
   try{
     const {data} = await new TasksApi().update(id,task)
-    dispatch({
-      type: UPDATE_TASK,
-      payload: data.data
-    })
+    dispatch(updateTaskInReducer(data.data))
   }catch(err){
     console.log(err);
   }
 };
+
+export const updateTaskInReducer = (task) => {
+  return {
+    type: UPDATE_TASK,
+    payload: task
+  }
+}
+
 
 export function logout() {
   localStorage.removeItem("token");
@@ -79,6 +84,7 @@ export const login = ({ email, password }) => async dispatch =>{
       const {data} = await new Auth().login({username:email,password});
       const token = `${data.token_type} ${data.access_token}`
       localStorage.setItem("token", token);
+      localStorage.setItem("refreshToken", data.refresh_token);
       new Auth().set_token();
       dispatch(loggedIn());
     }catch(err){
@@ -120,8 +126,8 @@ export const authUser = () =>async dispatch => {
     });
 
     await new TaskSocket().taskUpdated(user.data.id).listen("TaskUpdatedEvent", (e) => {
-      // Update Task in reducer
-      // dispatch(addTaskToReducer(e.task));
+      console.log(e.task);
+      dispatch(updateTaskInReducer(e.task))
     });
   }catch(err){
     console.log(err);

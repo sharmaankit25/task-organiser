@@ -13,8 +13,8 @@ export default class Socket {
             authEndpoint: `http://${SERVER_HOST_NAME}/broadcasting/auth`,
             auth: {
             headers: {
-              Authorization: localStorage.token,
-              Accept: 'application/json',
+              Authorization:localStorage.token,
+              Accept: 'application/json'
               }
             }
           });

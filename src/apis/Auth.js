@@ -12,13 +12,14 @@ export default class Auth {
             "password":password,
             "scope":"*"
         })
-        console.log(response);
         return response;
     }
 
     set_token(){
         if(localStorage.token){
            axios.defaults.headers.common['Authorization'] = localStorage.token;
+           axios.defaults.headers.common['Content-Type'] = 'application/json';
+           axios.defaults.headers.common['Accept'] = 'application/json';
         }
     }
 
@@ -35,7 +36,7 @@ export default class Auth {
     async refresh_token(){
         const response = axios.post('/oauth/token',{
             "grant_type":"refresh_token",
-            'refresh_token':"",
+            'refresh_token':localStorage.refreshToken,
             "client_id":PASSPORT_CLIENT_ID,
             "client_secret":PASSPORT_CLIENT_SECRET,
             "scope":"*"
