@@ -10,19 +10,20 @@ export default class TasksApi {
 
     }
 
-    create({groupSlug,title,dueDate,repeat,assignee}){
+    create({groupSlug,title,dueDate,repeat,assignee,priority}){
         const response = axios.post('/tasks',{
             "groupSlug":groupSlug,
             "title":title,
             "due_date":dueDate,
             "type":repeat,
             "is_completed":false,
-            "assignee":assignee
+            "assignee":assignee,
+            priority
         })
         return response;
     }
    
-    update(id,{isCompleted,label_id}){        
+    update(id,{isCompleted,label_id}){
         const response = axios.patch(`/tasks/${id}`,{
             isCompleted,label_id
         })

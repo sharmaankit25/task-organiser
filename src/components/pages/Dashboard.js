@@ -17,7 +17,7 @@ const Dashboard = ({ tasks }) => {
           isCompleted: false,
           dueDate: currentDate
         }).map((task,i) => (
-          <TaskCard index={i} key={task.title} {...task} />
+          <TaskCard index={i} key={task.id} {...task} />
         ))}
       </div>
     </div>

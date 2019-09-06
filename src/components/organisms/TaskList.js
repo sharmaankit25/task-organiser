@@ -1,7 +1,7 @@
 import React from "react";
 import {Droppable} from 'react-beautiful-dnd';
 
-const TaskList = ({id,title,color,children}) => {
+const TaskList = ({id,title,color,children}) => {  
     return(
         <article className={`message ${color ? color : "is-info"} card`}>
           <div className="message-header">

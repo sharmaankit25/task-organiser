@@ -1,6 +1,5 @@
 import axios from 'axios'
 import {API_BASE_URL} from '../config/app'
-import Auth from "../apis/Auth";
 
 axios.defaults.baseURL = API_BASE_URL;
 axios.defaults.headers.common['Content-Type'] = 'application/json';

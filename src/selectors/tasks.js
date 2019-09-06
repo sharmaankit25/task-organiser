@@ -1,30 +1,16 @@
 export default (tasks, { isCompleted, dueDate, groupSlug,label_id }) => {
-  console.log();
   return tasks.filter(task => {
-    if (
-      typeof isCompleted === "boolean" &&
-      typeof groupSlug === "string" && 
-      typeof label_id === "number"
-    ) {
+    if (typeof dueDate === "string" && typeof isCompleted === "boolean" && typeof groupSlug === "string" && typeof label_id === "number") {      
       return (
         task.isCompleted === isCompleted &&
-        task.groupSlug === groupSlug && 
+        task.dueDate === dueDate &&
+        task.groupSlug === groupSlug &&
         task.label_id === label_id
       );
     }
 
-    if (
-      typeof dueDate === "string" &&
-      typeof isCompleted === "boolean" &&
-      typeof groupSlug === "string" && 
-      typeof label_id === "number"
-    ) {
-      return (
-        task.isCompleted === isCompleted &&
-        task.dueDate === dueDate &&
-        task.groupSlug === groupSlug && 
-        task.label_id === label_id
-      );
+    if (typeof isCompleted === "boolean" && typeof groupSlug === "string" && typeof label_id === "number") {      
+      return (task.isCompleted === isCompleted && task.groupSlug === groupSlug && (task.label_id === label_id || task.label_id === null));
     }
 
     if (
@@ -32,6 +18,7 @@ export default (tasks, { isCompleted, dueDate, groupSlug,label_id }) => {
       typeof isCompleted === "boolean" &&
       typeof groupSlug === "string"
     ) {
+      console.log("#");
       return (
         task.isCompleted === isCompleted &&
         task.dueDate === dueDate &&

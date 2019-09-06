@@ -9,26 +9,7 @@ import { updateTask,loadLabels } from "../actions/index";
 
 
 const TodoList = ({ tasks,groupSlug,groupId,labels,updateTask,loadLabels }) => {
-  
-  const onDragEnd = result => {
-    const {destination,source,draggableId} = result;
-    if(!destination){
-      return;
-    }
-    if(destination.droppableId === source.droppableId){
-      return;
-    }
-    if(destination.droppableId === "Completed"){
-      updateTask(draggableId,{isCompleted:true,label_id:0});
-    }else if(destination.droppableId==="Backlog"){
-      updateTask(draggableId,{isCompleted:false,label_id:0});
-    }else{
-      updateTask(draggableId,{isCompleted:false,label_id:destination.droppableId});
-    }
-  }
-
   const [tasksData,setTasksData] = useState(tasks);
-
   useEffect(() => {
     async function fetchData() {
       if(groupId){        
@@ -41,19 +22,38 @@ const TodoList = ({ tasks,groupSlug,groupId,labels,updateTask,loadLabels }) => {
       
     };
   }, [tasks,groupId,loadLabels])
-  
+
+  const onDragEnd = result => {
+    const {destination,source,draggableId} = result;
+    if(!destination){
+      return;
+    }
+    if(destination.droppableId === source.droppableId){
+      return;
+    }
+
+    if(destination.droppableId === "Completed"){
+      updateTask(draggableId,{isCompleted:true,label_id:0});
+    }else if(destination.droppableId==="Backlog"){
+      updateTask(draggableId,{isCompleted:false,label_id:0});
+    }else{
+      updateTask(draggableId,{isCompleted:false,label_id:destination.droppableId});
+    }
+  }
+
+
   const searchCards = evt =>{
     const newTasks = tasks.filter((task)=>( task.title.includes(evt.target.value)));
     setTasksData(newTasks);
   }
-  
+
   if(!tasksData){
-    return null;
+    return (<h4>Loading ....</h4>);
   }
-  
+
   return (
     <div className="section">
-    <div className="field has-addons">
+      <div className="field has-addons">
           <p className="control">
             <input className="input" type="text" placeholder="Search cards" onInput={searchCards} />
           </p>
@@ -62,18 +62,20 @@ const TodoList = ({ tasks,groupSlug,groupId,labels,updateTask,loadLabels }) => {
       <DragDropContext onDragEnd={onDragEnd}>
       <div className="columns is-mobile">
         <div className="column is-narrow ">
-        <TaskList title="Backlog" color="is-default">
-        {filterTasks(tasksData, { isCompleted: false, groupSlug,label_id:0 }).map((task,i) => (
-          <Todo index={i} key={task.title} {...task} />
-        ))}
-        </TaskList>
+          <TaskList title="Backlog" color="is-default">
+          {
+            filterTasks(tasksData, { isCompleted: false, groupSlug,label_id:0 }).map((task,i) => (
+              <Todo index={i} key={task.id} {...task} />
+            ))
+          }
+          </TaskList>
         </div>
         {
           groupId && filterLabels(labels,{groupId}).length > 0 && filterLabels(labels,{groupId}).map(label=>(
             <div className="column is-narrow" key={label.title}>
             <TaskList {...label} color="is-info">
             {filterTasks(tasksData, { isCompleted: false, groupSlug,label_id:label.id }).map((task,i) => (
-              <Todo index={i} key={task.title} {...task} />
+              <Todo index={i} key={task.id} {...task} />
             ))}
             </TaskList>
             </div>
@@ -83,7 +85,7 @@ const TodoList = ({ tasks,groupSlug,groupId,labels,updateTask,loadLabels }) => {
         <div className="column is-narrow">
           <TaskList title="Completed" color="is-success">
             {filterTasks(tasksData, { isCompleted: true, groupSlug,label_id:0 }).map((task,i) => (
-              <Todo index={i} key={task.title} {...task} />
+              <Todo index={i} key={task.id} {...task} />
             ))}
           </TaskList>
         </div>

@@ -27,15 +27,14 @@ import TaskSocket from "../sockets/TaskSocket"
 // Create a new Task
 export const addTask = task => async dispatch => {
   try{
-    const {data} = await new TasksApi().create(task)
+    const {data} = await new TasksApi().create(task)    
     dispatch(addTaskToReducer(data.data))
   }catch(err){
     console.log(err)
   }
 };
 
-export const addTaskToReducer = (task) => {
-  console.log("Adding task to reducer",task)
+export const addTaskToReducer = (task) => {  
   return {
     type: ADD_TASK,
     payload: task
@@ -121,12 +120,12 @@ export const authUser = () =>async dispatch => {
       type:AUTH_USER,
       payload:user.data
     });
+    
     await new TaskSocket().taskCreated(user.data.id).listen("TaskCreatedEvent", (e) => {
       dispatch(addTaskToReducer(e.task));
     });
 
-    await new TaskSocket().taskUpdated(user.data.id).listen("TaskUpdatedEvent", (e) => {
-      console.log(e.task);
+    await new TaskSocket().taskUpdated(user.data.id).listen("TaskUpdatedEvent", (e) => {      
       dispatch(updateTaskInReducer(e.task))
     });
   }catch(err){

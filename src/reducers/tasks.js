@@ -8,7 +8,7 @@ export default (state = [], action) => {
       return [...state, ...action.payload];
     case UPDATE_TASK:
       return state.map(task =>
-        task.title === action.payload.title
+        task.id === action.payload.id
           ? { ...action.payload }
           : task
       );

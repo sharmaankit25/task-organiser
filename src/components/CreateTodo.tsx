@@ -9,6 +9,7 @@ interface ITask {
   repeat:string;
   isCompleted:boolean;
   groupSlug:any;
+  priority:string;
 }
 
 interface IProps {
@@ -30,7 +31,8 @@ const CreateTodo:FC<IProps> = ({ addTask,groupSlug,members }) => {
     dueDate: today,
     repeat: "one-time",
     isCompleted: false,
-    groupSlug:groupSlug?groupSlug:""
+    groupSlug:groupSlug?groupSlug:"",
+    priority:"medium"
   };
   const [task, setTask] = useState<ITask>(initialState);
 
@@ -105,11 +107,11 @@ const CreateTodo:FC<IProps> = ({ addTask,groupSlug,members }) => {
           <label className="label">Priority</label>
           <div className="control">
             <div className="select is-primary">
-              <select value="">
+              <select value={task.priority} onChange={e => setTask({ ...task, priority: e.target.value })}>
+              <option value="low">Low</option>
               <option value="medium">Medium</option>
-                <option value="critical">Critical</option>
-                <option value="high">High</option>                
-                <option value="low">Low</option>
+              <option value="high">High</option>                
+              <option value="critical">Critical</option>
               </select>
             </div>
           </div>

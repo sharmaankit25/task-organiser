@@ -3,7 +3,7 @@ import TaskCard from "../components/organisms/TaskCard"
 import { Draggable } from 'react-beautiful-dnd';
 
 const Todo = (task) => {
-  const { id,index } = task;
+  const { id,index } = task;  
   return (
     <Draggable draggableId={id} index={index}>
     {(provided) => (
