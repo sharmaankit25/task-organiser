@@ -2,7 +2,7 @@ import React,{useState} from "react";
 import {useSpring, animated} from 'react-spring'
 import TaskDetail from "../../components/organisms/TaskDetail"
 const TaskCard = (task) => {
-    const { title,dueDate,priority,id } = task;
+    const { title,dueDate,priority } = task;
     const animationProps = useSpring({opacity: 1,delay: 200, from: {opacity: 0}})
     const [modalState,setModalState] = useState(false);
     const openCardDetails = () => {

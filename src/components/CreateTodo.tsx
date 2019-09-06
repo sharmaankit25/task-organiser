@@ -15,10 +15,11 @@ interface ITask {
 interface IProps {
   addTask:(task:ITask)=>void;
   groupSlug:string;
-  members:any[];
+  members:any[];  
+  toggleCreateTaskFrom:any;
 }
 
-const CreateTodo:FC<IProps> = ({ addTask,groupSlug,members }) => {
+const CreateTodo:FC<IProps> = ({ addTask,groupSlug,members,toggleCreateTaskFrom }) => {
     const now = new Date();
     let dd = String(now.getDate()).padStart(2, '0');
     let mm = String(now.getMonth() + 1).padStart(2, '0'); //January is 0!
@@ -40,6 +41,7 @@ const CreateTodo:FC<IProps> = ({ addTask,groupSlug,members }) => {
     evt.preventDefault();
     addTask(task);
     setTask(initialState);
+    toggleCreateTaskFrom();
   };
 
   return (

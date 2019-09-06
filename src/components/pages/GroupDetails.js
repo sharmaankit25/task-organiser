@@ -51,7 +51,7 @@ const GroupDetails = ({ match:{params:{slug}},groups,members }) => {
       
       {todoFormStatus &&
       <Modal status={todoFormStatus} heading="Create Task" close={toggleCreateTaskFrom}>
-        <CreateTodos groupSlug={slug} members={group_members}  />
+        <CreateTodos groupSlug={slug} members={group_members} toggleCreateTaskFrom={()=>setTodoFormStatus(false)}/>
       </Modal>
       }
       <TasksList groupSlug={slug} groupId={group.id}/>
