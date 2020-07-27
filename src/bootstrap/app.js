@@ -1,5 +1,6 @@
 import axios from 'axios'
 import {API_BASE_URL} from '../config/app'
+import Auth from '../apis/Auth';
 
 axios.defaults.baseURL = API_BASE_URL;
 axios.defaults.headers.common['Content-Type'] = 'application/json';
@@ -18,11 +19,14 @@ axios.interceptors.request.use(config => {
 
 axios.interceptors.response.use((response) => {
     return response;
-},(error) => {
+},async (error) => {
     if (401 === error.response.status) {
         console.log("expired Refresh token");
-        // Auth.refresh_token();
+        await new Auth().refresh_token();
+        return Promise.resolve();
     } else {
+        await new Auth().logout();
+        window.location.refresh()
         return Promise.reject(error);
     }
 });

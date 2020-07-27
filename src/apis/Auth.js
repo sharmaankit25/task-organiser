@@ -33,7 +33,8 @@ export default class Auth {
         return res;
     }
 
-    async refresh_token(){
+    refresh_token(){
+
         const response = axios.post('/oauth/token',{
             "grant_type":"refresh_token",
             'refresh_token':localStorage.refreshToken,
@@ -45,6 +46,6 @@ export default class Auth {
     }
 
     async logout(){
-
+        localStorage.clear();
     }
 }

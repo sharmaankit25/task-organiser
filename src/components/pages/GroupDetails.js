@@ -5,13 +5,14 @@ import { connect } from "react-redux";
 import groupFilter from "../../selectors/groups"
 import MembersList from "../MembersList"
 import AddLabel from "../organisms/AddLabel"
+import Message from '../messages/Messages'
 import Modal from "../molecules/Modal";
 
 const GroupDetails = ({ match:{params:{slug}},groups,members }) => {
   const [todoFormStatus, setTodoFormStatus] = useState(false);
   const group = groupFilter(groups,{slug});
   const group_members = members.filter(member=>group.members.includes(member.id) && member.status);
-  
+
   const toggleCreateTaskFrom = evt => {
     evt.preventDefault();
     setTodoFormStatus(!todoFormStatus);
@@ -48,7 +49,7 @@ const GroupDetails = ({ match:{params:{slug}},groups,members }) => {
         </p>
       </div>
       </nav>
-      
+
       {todoFormStatus &&
       <Modal status={todoFormStatus} heading="Create Task" close={toggleCreateTaskFrom}>
         <CreateTodos groupSlug={slug} members={group_members} toggleCreateTaskFrom={()=>setTodoFormStatus(false)}/>
@@ -58,6 +59,7 @@ const GroupDetails = ({ match:{params:{slug}},groups,members }) => {
       <div className="section">
       <h3 className="subtitle">Members</h3>
         <MembersList members={group_members} />
+        <Message />
       </div>
     </section>
   );

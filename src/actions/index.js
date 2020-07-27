@@ -24,17 +24,19 @@ import LabelsApi from '../apis/LabelsApi'
 import TasksApi from '../apis/TasksApi'
 import MembersApi from '../apis/MembersApi'
 import TaskSocket from "../sockets/TaskSocket"
+import MessageSocket from "../sockets/MessageSocket"
+
 // Create a new Task
 export const addTask = task => async dispatch => {
   try{
-    const {data} = await new TasksApi().create(task)    
+    const {data} = await new TasksApi().create(task)
     dispatch(addTaskToReducer(data.data))
   }catch(err){
     console.log(err)
   }
 };
 
-export const addTaskToReducer = (task) => {  
+export const addTaskToReducer = (task) => {
   return {
     type: ADD_TASK,
     payload: task
@@ -120,13 +122,18 @@ export const authUser = () =>async dispatch => {
       type:AUTH_USER,
       payload:user.data
     });
-    
+
     await new TaskSocket().taskCreated(user.data.id).listen("TaskCreatedEvent", (e) => {
       dispatch(addTaskToReducer(e.task));
     });
 
-    await new TaskSocket().taskUpdated(user.data.id).listen("TaskUpdatedEvent", (e) => {      
+    await new TaskSocket().taskUpdated(user.data.id).listen("TaskUpdatedEvent", (e) => {
       dispatch(updateTaskInReducer(e.task))
+    });
+
+    await new MessageSocket().groupMessageReceived(1).listen("NewMessageEvent", (e) => {
+      console.log('Message Received', e)
+      // dispatch(updateTaskInReducer(e.task))
     });
   }catch(err){
     console.log(err);
@@ -198,7 +205,7 @@ export const loadMembers = () => async dispatch => {
       payload:data.data
     });
   }catch(err){
-    console.log(err.response); 
+    console.log(err.response);
   }
 };
 

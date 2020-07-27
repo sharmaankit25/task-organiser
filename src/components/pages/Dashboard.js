@@ -1,10 +1,21 @@
 import React from "react";
 import { connect } from "react-redux";
+import { Plugins } from '@capacitor/core';
 import filterTasks from "../../selectors/tasks";
 import TaskCard from "../organisms/TaskCard";
 
 const Dashboard = ({ tasks }) => {
   const currentDate = new Date().toJSON().slice(0, 10);
+  const { Device, Modals } = Plugins;
+  
+  const showDeviceInfo = async () =>  {
+    let info = await Device.getInfo();
+    await Modals.alert({
+        title: 'Info',
+        message: `UUID: ${info.uuid};
+        Model: ${info.model}`
+    });
+  }
   return (
     <div className="section">
       <h1 className="title">Dashboard</h1>
@@ -19,6 +30,9 @@ const Dashboard = ({ tasks }) => {
         }).map((task,i) => (
           <TaskCard index={i} key={task.id} {...task} />
         ))}
+      </div>
+      <div class="block">
+        <button onClick={showDeviceInfo} class="button is-white">Show Device Info</button>
       </div>
     </div>
   );

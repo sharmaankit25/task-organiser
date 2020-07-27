@@ -1,0 +1,8 @@
+{
+  "appId": "com.example.taskorganiser",
+  "appName": "task-organiser",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "build",
+  "cordova": {}
+}
