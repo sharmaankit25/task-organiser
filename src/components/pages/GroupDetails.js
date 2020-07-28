@@ -59,7 +59,7 @@ const GroupDetails = ({ match:{params:{slug}},groups,members }) => {
       <div className="section">
       <h3 className="subtitle">Members</h3>
         <MembersList members={group_members} />
-        <Message />
+        <Message groupId={group.id} />
       </div>
     </section>
   );

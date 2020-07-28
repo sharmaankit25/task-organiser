@@ -15,7 +15,9 @@ import {
   LOGGING,
   AUTH_USER,
   ADD_LABEL,
-  LOAD_LABELS
+  LOAD_LABELS,
+  LOAD_MESSAGES,
+  ADD_MESSAGE
 } from "./types";
 
 import Auth from '../apis/Auth'
@@ -23,6 +25,7 @@ import GroupsApi from '../apis/GroupsApi'
 import LabelsApi from '../apis/LabelsApi'
 import TasksApi from '../apis/TasksApi'
 import MembersApi from '../apis/MembersApi'
+import MessagesApi from '../apis/MessagesApi'
 import TaskSocket from "../sockets/TaskSocket"
 import MessageSocket from "../sockets/MessageSocket"
 
@@ -35,6 +38,38 @@ export const addTask = task => async dispatch => {
     console.log(err)
   }
 };
+
+export const loadMessages = (type = 'group',id) => async dispatch => {
+  await new MessageSocket().groupMessageReceived(id).listen("NewMessageEvent", (e) => {
+    dispatch({
+      type: ADD_MESSAGE,
+      payload: e.message
+    })
+  });
+  try{
+    const {data} = await new MessagesApi().fetch(type, id)
+    dispatch({
+      type: LOAD_MESSAGES,
+      payload: data
+    })
+  }catch(err){
+    console.log(err);
+  }
+  return {}
+}
+
+export const sendMessages = (type = 'group',id, message)  => async dispatch => {
+  try{
+    await new MessagesApi().send(type, id, { message })
+    // dispatch({
+    //   type: ADD_MESSAGE,
+    //   payload: data
+    // })
+  }catch(err){
+    console.log(err);
+  }
+  return {}
+}
 
 export const addTaskToReducer = (task) => {
   return {
@@ -129,11 +164,6 @@ export const authUser = () =>async dispatch => {
 
     await new TaskSocket().taskUpdated(user.data.id).listen("TaskUpdatedEvent", (e) => {
       dispatch(updateTaskInReducer(e.task))
-    });
-
-    await new MessageSocket().groupMessageReceived(1).listen("NewMessageEvent", (e) => {
-      console.log('Message Received', e)
-      // dispatch(updateTaskInReducer(e.task))
     });
   }catch(err){
     console.log(err);

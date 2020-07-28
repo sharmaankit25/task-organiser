@@ -27,3 +27,6 @@ export const LOGOUT = "LOGOUT";
 export const AUTH_ERROR = "AUTH_ERROR";
 export const LOGGING = "LOGGING";
 export const AUTH_USER = "AUTH_USER";
+
+export const LOAD_MESSAGES = 'LOAD_MESSAGES'
+export const ADD_MESSAGE = 'ADD_MESSAGE'

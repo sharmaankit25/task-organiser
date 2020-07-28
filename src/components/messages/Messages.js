@@ -1,51 +1,59 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
+import MessageBox from './MessageBox'
+import { connect } from 'react-redux'
+import { sendMessages, loadMessages } from '../../actions'
+const Messages = ({ sendMessages, loadMessages, groupId, messages, auth }) => {
+    useEffect(() => {
+        loadGroupMessage()
+    }, [])
+    const loadGroupMessage = async () => {
+        await loadMessages('group', groupId)
+    }
 
-export default () => {
     const [message, setMessage] = useState('')
     const sendMessage = (evt) => {
         evt.preventDefault();
-        console.log('Send Message', message)
+        sendMessages('group', groupId, message)
         setMessage('')
     }
     return (
         <>
-        <div class="card">
-        <header class="card-header">
-            <p class="card-header-title">
+        <div className="card">
+        <header className="card-header">
+            <p className="card-header-title">
             Messages
             </p>
         </header>
-        <div class="card-content">
-            <div class="content">
+        <div className="card-content">
+            <div className="content">
             <div>
-
-        <div className="columns">
-            <span className="column is-four-fifths"></span>
-            <span className="column box">Message 1</span>
-        </div>
-        <div className="columns">
-            <span className="column box">Message 2</span>
-            <span className="column is-four-fifths"></span>
-        </div>
+            {
+                messages.map(m => {
+                    return <MessageBox key={m.time}
+                        align={ auth.user.id === m.user_id ? 'right' : 'left'}
+                        text={m.message} />
+                })
+            }
         </div>
             </div>
         </div>
-        <footer class="card-footer">
+        <footer className="card-footer">
         <form className="card-footer-item" onSubmit={sendMessage}>
-        <div class="field has-addons">
-            <p class="control">
+        <div className="field has-addons">
+            <p className="control">
                 <input className="input" type="text" placeholder="Message" value={message} onChange={e => setMessage(e.target.value)} />
             </p>
-            <p class="control">
+            <p className="control">
                 <button className="button is-info">Send</button>
             </p>
         </div>
     </form>
         </footer>
         </div>
-
-
-
         </>
     )
 }
+
+const mapStateToProps = ({ messages, auth }) => ({ messages, auth })
+
+export default connect(mapStateToProps, { sendMessages, loadMessages })(Messages)
