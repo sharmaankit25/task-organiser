@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import CreateTodos from "../CreateTodo";
 import TasksList from "../TodoList";
 import { connect } from "react-redux";
@@ -38,7 +39,14 @@ const GroupDetails = ({ match:{params:{slug}},groups,members }) => {
       </div>
       </div>
       <div className="level-right">
-        <p className="level-item"> </p>
+        <p className="level-item">
+          <Link
+            className="button is-info is-outlined"
+            to={`/conference/${group.slug}`}
+            >
+            Start Meeting
+          </Link>
+        </p>
         <p className="level-item">
         {!todoFormStatus ? <button
           onClick={toggleCreateTaskFrom}
