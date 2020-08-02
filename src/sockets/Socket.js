@@ -20,7 +20,6 @@ export default class Socket {
           });
 
 
-
       this.echo.connector.pusher.connection.bind( 'error', function( err ) {
         if( err.error.data.code === 4004 ) {
         console.log('>>> detected limit error');

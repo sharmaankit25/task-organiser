@@ -42,7 +42,7 @@ const GroupDetails = ({ match:{params:{slug}},groups,members }) => {
         <p className="level-item">
           <Link
             className="button is-info is-outlined"
-            to={`/conference/${group.slug}`}
+            to={`/conference/${group.slug}/${group.id}`}
             >
             Start Meeting
           </Link>
