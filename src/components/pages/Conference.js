@@ -1,16 +1,16 @@
-import React, { useState, createRef, useEffect } from 'react';
+import React, { useState, createRef, useRef, useEffect } from 'react';
 import ConferenceSocket from '../../sockets/ConferenceSocket'
 import ConferenceApi from '../../apis/ConferenceApi'
 import Peer from 'peerjs';
 
 export default function Conference({ match:{params:{slug,group_id}} }) {
     const [video]=useState(createRef())
+    const [usersVideos, setUserVideos] = useState({})
+    const [elementsRef, setElementsRef] = useState(createRef())
 
-    // const [usersVideos] = useState(createRef())
+    // const [peers, setPeers] = useState({})
 
-    const [peers, setPeers] = useState({})
     const myPeer = new Peer()
-
     useEffect(() => {
         var myStream = null
         // Send my peer id to server to dispatch event that I am connected
@@ -20,6 +20,7 @@ export default function Conference({ match:{params:{slug,group_id}} }) {
         if (navigator.getUserMedia) {
             navigator.getUserMedia({video: true, audio: true},
                 (stream) => {
+                // Add video to stream
                 myStream = stream
                 try {
                     video.current.srcObject = myStream
@@ -27,17 +28,19 @@ export default function Conference({ match:{params:{slug,group_id}} }) {
                     video.current.src = URL.createObjectURL(myStream)
                 }
 
-                subscribeToVideoConferenceChannel()
                 myPeer.on('call', call => {
                     call.answer(stream)
                     call.on('stream', userVideoStream => {
-                        console.log('My Video Stream')
+                        try {
+                            elementsRef.current.srcObject = userVideoStream
+                        } catch (e) {
+                            elementsRef.current.src = URL.createObjectURL(userVideoStream)
+                        }
                     })
                 })
 
-                // socket.on('user-connected', userId => {
-                    // connectToNewUser(userId, stream)
-                //   })
+                subscribeToVideoConferenceChannel(myStream)
+
             }, (error)=> {
                 console.log("error",error);
             })
@@ -49,46 +52,31 @@ export default function Conference({ match:{params:{slug,group_id}} }) {
         }
     },[])
 
-    const subscribeToVideoConferenceChannel = async () => {
-        await new ConferenceSocket().groupVideoConferenceReceived(group_id)
-        .listen("ConferenceEvent", (e) => {
-            console.log(e)
-         })
-        .whisper('signal', {
-            name: 'Ankit Sharma'
+    const startPeer = async () => {
+        myPeer.on('open', async id => {
+            await new ConferenceApi().fetch(id, group_id)
         })
-        .listenForWhisper('signal', (signal) => {
-            console.log(signal)
-            // let peer = peers[signal.user_id]
-            // if (peer === undefined) {
-            //     setPeers({...peers, otherUserId: signal.user_id})
-            //     peer = startPeer(signal.user_id)
-            // }
-        })
-
-        // whisper and get signal in call back
-
-        // setPeers([...peers, signal.user_id])
     }
 
-    const connectToNewUser = (userId, stream) => {
-        const call = myPeer.call(userId, stream)
-        // Create new video ref
+    const subscribeToVideoConferenceChannel = async (stream) => {
+        await new ConferenceSocket().groupVideoConferenceReceived(group_id)
+        .listen("ConferenceEvent", ({ id }) => {
+            connectToNewUser(id, stream)
+         })
+    }
+
+    const connectToNewUser = (peerId, stream) => {
+        const call = myPeer.call(peerId, stream)
         call.on('stream', userVideoStream => {
-          console.log('User video Stream')
+            // Attach stream to video
+            try {
+                elementsRef.current.srcObject = userVideoStream
+            } catch (e) {
+                elementsRef.current.src = URL.createObjectURL(userVideoStream)
+            }
         })
         call.on('close', () => {
             console.log('Remove Video')
-        })
-
-        peers[userId] = call
-    }
-
-    const startPeer = async () => {
-        myPeer.on('open', async id => {
-            console.log('My Peer ID is', id)
-            // Send userid and group id to server
-            await new ConferenceApi().fetch(id, group_id)
         })
     }
 
@@ -96,7 +84,13 @@ export default function Conference({ match:{params:{slug,group_id}} }) {
         <section className="section">
         <div className="columns is-multiline">
             <div className="column is-one-quarter">
-                <video ref={video} autoPlay={true} />
+                <div className="box">
+                <video muted ref={video} autoPlay={true} />
+                Me
+                </div>
+            </div>
+            <div className="column is-one-quarter">
+                <video muted ref={elementsRef} autoPlay={true} />
             </div>
         </div>
         </section>

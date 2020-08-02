@@ -24,9 +24,11 @@ axios.interceptors.response.use((response) => {
         console.log("expired Refresh token");
         await new Auth().refresh_token();
         return Promise.resolve();
-    } else {
-        await new Auth().logout();
-        window.location.refresh()
-        return Promise.reject(error);
     }
+
+    // if (error.response.status === 500) {
+    //     await new Auth().logout();
+    //     window.location.refresh()
+    //     return Promise.reject(error);
+    // }
 });
