@@ -10,7 +10,7 @@ import Guest from "./components/hoc/Guest";
 
 export default [
   { path: "/", component: Auth(Dashboard), exact: true },
-  { path: "/conference/:slug/:id", component: Auth(Conference), exact: true },
+  { path: "/conference/:slug/:group_id", component: Auth(Conference), exact: true },
   { path: "/create-task", component: Auth(CreateTodo) },
   { path: "/groups", component: Auth(Groups) ,exact: true},
   { path: "/groups/:slug", component: Auth(GroupDetails)},
