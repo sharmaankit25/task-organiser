@@ -60,11 +60,11 @@ export const loadMessages = (type = 'group',id) => async dispatch => {
 
 export const sendMessages = (type = 'group',id, message)  => async dispatch => {
   try{
-    await new MessagesApi().send(type, id, { message })
-    // dispatch({
-    //   type: ADD_MESSAGE,
-    //   payload: data
-    // })
+    const { data } =await new MessagesApi().send(type, id, { message })
+    dispatch({
+      type: ADD_MESSAGE,
+      payload: data
+    })
   }catch(err){
     console.log(err);
   }

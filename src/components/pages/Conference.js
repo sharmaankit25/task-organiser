@@ -3,12 +3,16 @@ import ConferenceSocket from '../../sockets/ConferenceSocket'
 import ConferenceApi from '../../apis/ConferenceApi'
 import Peer from 'peerjs';
 import VideoItem from '../VideoItem'
+import Message from '../messages/Messages'
 
 export default function Conference({ match:{params:{slug,group_id}} }) {
     const [video]=useState(createRef())
     const [usersVideos, setUserVideos] = useState({})
 
-    const [myMediaStatus, setMyMediaStatus] = useState({ video: true, audio: true })
+    const [myMediaStatus, setMyMediaStatus] = useState({ video: {
+        width: { min: 160, ideal: 640, max: 1280 },
+        height: { min: 120, ideal: 360, max: 720 }
+      }, audio: true })
 
 
     const myPeer = new Peer()
@@ -95,6 +99,7 @@ export default function Conference({ match:{params:{slug,group_id}} }) {
             </div>
             </div>
         </div>
+        <Message groupId={group_id} />
         </section>
     )
 }

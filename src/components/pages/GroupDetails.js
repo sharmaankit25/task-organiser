@@ -9,6 +9,7 @@ import AddLabel from "../organisms/AddLabel"
 import Message from '../messages/Messages'
 import Modal from "../molecules/Modal";
 
+
 const GroupDetails = ({ match:{params:{slug}},groups,members }) => {
   const [todoFormStatus, setTodoFormStatus] = useState(false);
   const group = groupFilter(groups,{slug});
@@ -28,17 +29,17 @@ const GroupDetails = ({ match:{params:{slug}},groups,members }) => {
       <h2 className="title">{group.title}</h2>
       <p className="content box">{group.description}</p>
       <nav className="level">
-      <div className="level-left">
-      <div className="level-item">
-        <p className="subtitle is-5">
-          <strong></strong>
-        </p>
-      </div>
-      <div className="level-item">
-      <AddLabel groupId={group.id}/>
-      </div>
-      </div>
-      <div className="level-right">
+        <div className="level-left">
+        <div className="level-item">
+          <p className="subtitle is-5">
+            <strong></strong>
+          </p>
+        </div>
+        <div className="level-item">
+        <AddLabel groupId={group.id}/>
+        </div>
+        </div>
+        <div className="level-right">
         <p className="level-item">
           <Link
             className="button is-info is-outlined"
