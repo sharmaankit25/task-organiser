@@ -2,25 +2,29 @@ import React, { useState, createRef, useRef, useEffect } from 'react';
 import ConferenceSocket from '../../sockets/ConferenceSocket'
 import ConferenceApi from '../../apis/ConferenceApi'
 import Peer from 'peerjs';
+import VideoItem from '../VideoItem'
 
 export default function Conference({ match:{params:{slug,group_id}} }) {
     const [video]=useState(createRef())
     const [usersVideos, setUserVideos] = useState({})
-    const [elementsRef, setElementsRef] = useState(createRef())
 
-    // const [peers, setPeers] = useState({})
+    const [myMediaStatus, setMyMediaStatus] = useState({ video: true, audio: true })
+
 
     const myPeer = new Peer()
     useEffect(() => {
         var myStream = null
         // Send my peer id to server to dispatch event that I am connected
-        startPeer()
+        var myPeerID = null
+        myPeer.on('open', async id => {
+            myPeerID = id
+            await new ConferenceApi().fetch(id, group_id)
+        })
 
         navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
         if (navigator.getUserMedia) {
-            navigator.getUserMedia({video: true, audio: true},
+            navigator.getUserMedia(myMediaStatus,
                 (stream) => {
-                // Add video to stream
                 myStream = stream
                 try {
                     video.current.srcObject = myStream
@@ -31,11 +35,7 @@ export default function Conference({ match:{params:{slug,group_id}} }) {
                 myPeer.on('call', call => {
                     call.answer(stream)
                     call.on('stream', userVideoStream => {
-                        try {
-                            elementsRef.current.srcObject = userVideoStream
-                        } catch (e) {
-                            elementsRef.current.src = URL.createObjectURL(userVideoStream)
-                        }
+                        setUserVideos({ ...usersVideos, [call.peer]: userVideoStream })
                     })
                 })
 
@@ -52,12 +52,6 @@ export default function Conference({ match:{params:{slug,group_id}} }) {
         }
     },[])
 
-    const startPeer = async () => {
-        myPeer.on('open', async id => {
-            await new ConferenceApi().fetch(id, group_id)
-        })
-    }
-
     const subscribeToVideoConferenceChannel = async (stream) => {
         await new ConferenceSocket().groupVideoConferenceReceived(group_id)
         .listen("ConferenceEvent", ({ id }) => {
@@ -69,28 +63,36 @@ export default function Conference({ match:{params:{slug,group_id}} }) {
         const call = myPeer.call(peerId, stream)
         call.on('stream', userVideoStream => {
             // Attach stream to video
-            try {
-                elementsRef.current.srcObject = userVideoStream
-            } catch (e) {
-                elementsRef.current.src = URL.createObjectURL(userVideoStream)
-            }
+            setUserVideos({ ...usersVideos, [peerId]: userVideoStream })
         })
         call.on('close', () => {
             console.log('Remove Video')
         })
     }
 
+    const shareScreen = () => {
+        setMyMediaStatus({ video: !myMediaStatus.video, audio: !myMediaStatus.audio })
+    }
+
+    console.log(usersVideos)
     return (
         <section className="section">
         <div className="columns is-multiline">
-            <div className="column is-one-quarter">
+            <div className="column is-one-third">
                 <div className="box">
-                <video muted ref={video} autoPlay={true} />
+                <video playsInline muted ref={video} autoPlay={true} />
                 Me
+                <button onClick={shareScreen} >Share Screen</button>
                 </div>
             </div>
-            <div className="column is-one-quarter">
-                <video muted ref={elementsRef} autoPlay={true} />
+            <div className="column is-one-third">
+            <div className="box">
+            {
+                Object.keys(usersVideos).map(userId => (
+                    <VideoItem key={userId} stream={usersVideos[userId]} />
+                ))
+            }
+            </div>
             </div>
         </div>
         </section>

@@ -7,7 +7,7 @@ import TaskCard from "../organisms/TaskCard";
 const Dashboard = ({ tasks }) => {
   const currentDate = new Date().toJSON().slice(0, 10);
   const { Device, Modals } = Plugins;
-  
+
   const showDeviceInfo = async () =>  {
     let info = await Device.getInfo();
     await Modals.alert({
@@ -31,8 +31,8 @@ const Dashboard = ({ tasks }) => {
           <TaskCard index={i} key={task.id} {...task} />
         ))}
       </div>
-      <div class="block">
-        <button onClick={showDeviceInfo} class="button is-white">Show Device Info</button>
+      <div className="block">
+        <button onClick={showDeviceInfo} className="button is-white">Show Device Info</button>
       </div>
     </div>
   );
