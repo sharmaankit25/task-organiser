@@ -8,6 +8,15 @@ module.exports = {
       env_production : {
         NODE_ENV: 'production'
       }
+    },
+    {
+      name          : 'task-organiser-peer-server',
+      script        : 'peerjs',
+      interpreter   : 'none',
+      args          : '--port 9000',
+      env_production : {
+        NODE_ENV: 'production'
+      }
     }
   ],
 
