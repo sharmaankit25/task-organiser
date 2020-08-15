@@ -22,13 +22,21 @@ axios.interceptors.response.use((response) => {
 },async (error) => {
     if (401 === error.response.status) {
         console.log("expired Refresh token");
-        await new Auth().refresh_token();
-        return Promise.resolve();
+        try {
+            const res = await new Auth().refresh_token();
+            if (res) {
+                return Promise.resolve();
+            }
+        } catch(e) {
+            console.log('Not able to get refresh token')
+            return Promise.reject(error);
+        }
+        return Promise.reject(error);
     }
 
-    // if (error.response.status === 500) {
-    //     await new Auth().logout();
-    //     window.location.refresh()
-    //     return Promise.reject(error);
-    // }
+    if (error.response.status === 500) {
+        console.log('Something went wrong on server')
+    }
+
+    return Promise.reject(error);
 });

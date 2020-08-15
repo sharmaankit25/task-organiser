@@ -16,13 +16,14 @@ export default function Conference({ match:{params:{slug,group_id}} }) {
       }, audio: true })
 
 
-    const myPeer = new Peer()
+    const myPeer = new Peer(undefined, {
+        host: '/',
+        port: '9000'
+    })
     useEffect(() => {
         var myStream = null
         // Send my peer id to server to dispatch event that I am connected
-        var myPeerID = null
         myPeer.on('open', async id => {
-            myPeerID = id
             await new ConferenceApi().fetch(id, group_id)
         })
 
