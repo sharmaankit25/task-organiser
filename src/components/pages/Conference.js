@@ -18,6 +18,7 @@ export default function Conference({ match:{params:{slug,group_id}} }) {
 
     const myPeer = new Peer(undefined, {
         host: '/',
+        secure: true,
         port: '9000'
     })
     useEffect(() => {

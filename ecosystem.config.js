@@ -13,7 +13,7 @@ module.exports = {
       name          : 'task-organiser-peer-server',
       script        : 'peerjs',
       interpreter   : 'none',
-      args          : '--port 9000',
+      args          : '--port 9000 --sslkey /etc/letsencrypt/live/scribblelabs.tech/privkey.pem --sslcert /etc/letsencrypt/live/scribblelabs.tech/fullchain.pem',
       env_production : {
         NODE_ENV: 'production'
       }
