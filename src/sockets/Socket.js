@@ -11,6 +11,7 @@ export default class Socket {
             wsHost: SERVER_HOST_NAME,
             wsPort: 6001,
             disableStats: true,
+            forceTLS: process.env.NODE_ENV === 'development' ? false : true,
             authEndpoint: process.env.NODE_ENV === 'development' ? `http://${SERVER_HOST_NAME}/broadcasting/auth` : `https://${SERVER_HOST_NAME}/broadcasting/auth`,
             auth: {
             headers: {
