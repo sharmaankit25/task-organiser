@@ -17,11 +17,11 @@ const Navbar = ({ auth,user }) => {
   const closeNav = () => {
     setActive("");
   };
-  
+
   return (
-    <nav className="navbar" role="navigation" aria-label="main navigation">
+    <nav className="navbar is-fixed-top is-primary " role="navigation" aria-label="main navigation">
       <div className="navbar-brand">
-        <Link onClick={closeNav} className="navbar-item" to="/">
+        { /* <Link onClick={closeNav} className="navbar-item" to="/">
           <img
             src="https://bulma.io/images/bulma-logo.png"
             alt="task-organiser"
@@ -30,10 +30,11 @@ const Navbar = ({ auth,user }) => {
             height="28"
           />
         </Link>
+        */ }
 
         <button
           onClick={toggleNav}
-          className={`button is-white navbar-burger ${active}`}
+          className={`button is-primary navbar-burger ${active}`}
         >
           <span aria-hidden="true" />
           <span aria-hidden="true" />
@@ -46,7 +47,7 @@ const Navbar = ({ auth,user }) => {
           <div className="navbar-start">
             <Link onClick={closeNav} className="navbar-item" to="/">
               Home
-            </Link>            
+            </Link>
             <Link
               onClick={closeNav}
               activeClassName="is-active"
@@ -92,7 +93,7 @@ const Navbar = ({ auth,user }) => {
         <div className="navbar-end">
           <div className="navbar-item">
             <div className="buttons">
-              
+
               {auth ? <button className="button is-primary">
                 <strong>{user.name|| "Account"}</strong>
               </button>:""
@@ -117,7 +118,7 @@ const Navbar = ({ auth,user }) => {
 };
 
 const mapStateToProps = ({ auth }) => {
-  return { 
+  return {
       auth: auth.authenticated,
       user:auth.user
     };

@@ -8,6 +8,7 @@ import Message from '../messages/Messages'
 export default function Conference({ match:{params:{slug,group_id}} }) {
     const [video]=useState(createRef())
     const [usersVideos, setUserVideos] = useState({})
+    const [localStream, setLocalStream] = useState(null)
 
     const [myMediaStatus, setMyMediaStatus] = useState({ video: {
         width: { min: 160, ideal: 640, max: 1280 },
@@ -30,6 +31,7 @@ export default function Conference({ match:{params:{slug,group_id}} }) {
             navigator.getUserMedia(myMediaStatus,
                 (stream) => {
                 myStream = stream
+                setLocalStream(stream)
                 try {
                     video.current.srcObject = myStream
                 } catch (e) {
