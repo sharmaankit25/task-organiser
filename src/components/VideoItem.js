@@ -12,7 +12,7 @@ export default ({ stream }) => {
     }, [])
 
     return (
-        <video playsInline muted ref={video} autoPlay={true} />
+        <video playsInline ref={video} autoPlay={true} />
     )
 }
 
