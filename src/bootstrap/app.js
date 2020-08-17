@@ -1,6 +1,8 @@
 import axios from 'axios'
 import {API_BASE_URL} from '../config/app'
 import Auth from '../apis/Auth';
+import { Plugins } from '@capacitor/core';
+const { Toast } = Plugins;
 
 axios.defaults.baseURL = API_BASE_URL;
 axios.defaults.headers.common['Content-Type'] = 'application/json';
@@ -21,21 +23,16 @@ axios.interceptors.response.use((response) => {
     return response;
 },async (error) => {
     if (401 === error.response.status) {
-        console.log("expired Refresh token");
-        try {
-            const res = await new Auth().refresh_token();
-            if (res) {
-                return Promise.resolve();
-            }
-        } catch(e) {
-            console.log('Not able to get refresh token')
-            return Promise.reject(error);
-        }
+        await Toast.show({
+            text: 'Unauthorized Access'
+        });
         return Promise.reject(error);
     }
 
     if (error.response.status === 500) {
-        console.log('Something went wrong on server')
+        await Toast.show({
+            text: 'Oops! Something went wrong on server'
+        });
     }
 
     return Promise.reject(error);

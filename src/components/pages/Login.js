@@ -22,7 +22,12 @@ const Login = ({ login,error,history,authenticated }) => {
 
   return (
     <div className="section">
-      <form onSubmit={authenticate}>
+      <div className="columns">
+        <div className="column">
+        <p>Built for Teams..</p>
+        </div>
+        <div className="column">
+        <form onSubmit={authenticate}>
         <div className="field">
           <p className="control has-icons-left has-icons-right">
             <input className="input" type="email" placeholder="Email"
@@ -39,7 +44,7 @@ const Login = ({ login,error,history,authenticated }) => {
         </div>
         <div className="field">
           <p className="control has-icons-left">
-            <input className="input" type="password" placeholder="Password" 
+            <input className="input" type="password" placeholder="Password"
               value={credentials.password}
               onChange={e=>setCredentials({...credentials,password:e.target.value})}
               />
@@ -55,6 +60,8 @@ const Login = ({ login,error,history,authenticated }) => {
           </p>
         </div>
       </form>
+        </div>
+      </div>
     </div>
   );
 };
