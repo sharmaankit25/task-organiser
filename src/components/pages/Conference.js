@@ -10,21 +10,15 @@ export default function Conference({ match:{params:{slug,group_id}} }) {
     const [video]=useState(createRef())
     const [usersVideos, setUserVideos] = useState({})
     const [localStream, setLocalStream] = useState(null)
+    const [micState, setMicState] = useState(true)
+    const [camState, setCamState] = useState(true)
     const [myPeer, setMyPeer] = useState(new Peer(undefined, {
         host: '/',
         secure: process.env.NODE_ENV !== 'development',
         port: '9000'
     }))
 
-
-    const [myMediaStatus, setMyMediaStatus] = useState({ video: {
-        width: { min: 160, ideal: 640, max: 640 },
-        height: { min: 120, ideal: 360, max: 360 }
-      }, audio: true })
-
-
     useEffect(() => {
-
         if (!localStream) {
             getUserMedia().then(async () => {
                 if (myPeer.open) {
@@ -63,7 +57,10 @@ export default function Conference({ match:{params:{slug,group_id}} }) {
         return new Promise((resolve, reject) => {
           navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
           navigator.getUserMedia(
-            myMediaStatus,
+            { video: {
+                width: { min: 160, ideal: 640, max: 640 },
+                height: { min: 120, ideal: 360, max: 360 }
+              }, audio: true },
             stream => {
                 setMyVideoObject (stream)
                 setLocalStream(stream)
@@ -75,6 +72,26 @@ export default function Conference({ match:{params:{slug,group_id}} }) {
             }
           );
         });
+    }
+
+    const setAudioLocal = () => {
+        if (localStream) {
+            if(localStream.getAudioTracks().length > 0){
+                localStream.getAudioTracks().forEach(track => {
+                  track.enabled=!track.enabled;
+                });
+            }
+        }
+        setMicState(!micState)
+      }
+
+    const setVideoLocal = () => {
+        if(localStream.getVideoTracks().length > 0){
+          localStream.getVideoTracks().forEach(track => {
+            track.enabled=!track.enabled;
+          });
+        }
+        setCamState(!camState)
     }
 
     const getDisplay = () => {
@@ -125,8 +142,30 @@ export default function Conference({ match:{params:{slug,group_id}} }) {
             <div className="column is-one-third">
                 <div className="card">
                 <video playsInline muted ref={video} autoPlay={true} />
-                Me
-                <button onClick={getDisplay} >Share Screen</button>
+                <div className="columns is-vcentered">
+                <span className="column is-two-thirds">
+                    <p style={{ padding: '0px 5px 0px 5px' }} className="subtitle">You</p>
+                </span>
+                <span className="column">
+                <div className="buttons are-small">
+                    <button className="button is-secondary" onClick={getDisplay} >
+                    <span className="icon">
+                        <i className={`fas fa-desktop`} ></i>
+                    </span>
+                    </button>
+                    <button className="button is-danger" onClick={setAudioLocal} >
+                        <span className="icon">
+                            <i className={`fas ${micState ? 'fa-microphone' : 'fa-microphone-slash'}`} ></i>
+                        </span>
+                    </button>
+                    <button className="button is-info" onClick={setVideoLocal} >
+                        <span className="icon">
+                            <i className={`fas ${camState ? 'fa-video' : 'fa-video-slash'}`}></i>
+                        </span>
+                    </button>
+                </div>
+                </span>
+                </div>
                 </div>
             </div>
         </div>
