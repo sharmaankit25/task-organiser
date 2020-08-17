@@ -40,6 +40,8 @@ const Messages = ({ sendMessages, loadMessages, groupId, messages, auth }) => {
                 className='input'
                 type='text'
                 placeholder='Message'
+                required
+                aria-required
                 value={message}
                 onChange={e => setMessage(e.target.value)}
               />
@@ -64,6 +66,7 @@ const Messages = ({ sendMessages, loadMessages, groupId, messages, auth }) => {
                   key={m.time}
                   align={auth.user.id === m.user_id ? 'right' : 'left'}
                   text={m.message}
+                  message={m}
                 />
               )
             })}
