@@ -13,7 +13,7 @@ export default class Socket {
             wssPort: 6001,
             disableStats: true,
             enabledTransports: ['ws', 'wss'],
-            encrypted: true,
+            encrypted: process.env.NODE_ENV !== 'development',
             forceTLS: process.env.NODE_ENV === 'development' ? false : true,
             authEndpoint: process.env.NODE_ENV === 'development' ? `http://${SERVER_HOST_NAME}/broadcasting/auth` : `https://${SERVER_HOST_NAME}/broadcasting/auth`,
             auth: {

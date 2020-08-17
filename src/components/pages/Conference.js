@@ -16,10 +16,9 @@ export default function Conference({ match:{params:{slug,group_id}} }) {
         height: { min: 120, ideal: 360, max: 360 }
       }, audio: true })
 
-
     const myPeer = new Peer(undefined, {
         host: '/',
-        secure: true,
+        secure: process.env.NODE_ENV !== 'development',
         port: '9000'
     })
     useEffect(() => {
