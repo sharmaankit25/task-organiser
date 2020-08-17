@@ -1,6 +1,5 @@
 import axios from 'axios'
 import {API_BASE_URL} from '../config/app'
-import Auth from '../apis/Auth';
 import { Plugins } from '@capacitor/core';
 const { Toast } = Plugins;
 

@@ -1,4 +1,4 @@
-import React, { useState, createRef, useRef, useEffect } from 'react';
+import React, { useState, createRef, useEffect } from 'react';
 import ConferenceSocket from '../../sockets/ConferenceSocket'
 import ConferenceApi from '../../apis/ConferenceApi'
 import Peer from 'peerjs';
@@ -9,10 +9,11 @@ export default function Conference({ match:{params:{slug,group_id}} }) {
     const [video]=useState(createRef())
     const [usersVideos, setUserVideos] = useState({})
     const [localStream, setLocalStream] = useState(null)
+    console.log(localStream)
 
     const [myMediaStatus, setMyMediaStatus] = useState({ video: {
-        width: { min: 160, ideal: 640, max: 1280 },
-        height: { min: 120, ideal: 360, max: 720 }
+        width: { min: 160, ideal: 640, max: 640 },
+        height: { min: 120, ideal: 360, max: 360 }
       }, audio: true })
 
 
@@ -82,19 +83,18 @@ export default function Conference({ match:{params:{slug,group_id}} }) {
         setMyMediaStatus({ video: !myMediaStatus.video, audio: !myMediaStatus.audio })
     }
 
-    console.log(usersVideos)
     return (
         <section className="section">
         <div className="columns is-multiline">
             <div className="column is-one-third">
-                <div className="box">
+                <div className="card">
                 <video playsInline muted ref={video} autoPlay={true} />
                 Me
                 <button onClick={shareScreen} >Share Screen</button>
                 </div>
             </div>
             <div className="column is-one-third">
-            <div className="box">
+            <div className="card">
             {
                 Object.keys(usersVideos).map(userId => (
                     <VideoItem key={userId} stream={usersVideos[userId]} />
