@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import { NavLink as Link } from "react-router-dom";
 import { Plugins } from '@capacitor/core';
 import filterTasks from "../../selectors/tasks";
 import TaskCard from "../organisms/TaskCard";
@@ -18,12 +19,21 @@ const Dashboard = ({ tasks }) => {
   }
   return (
     <div className="section">
-      <h1 className="title">Dashboard</h1>
+    <Link
+    activeClassName="is-active"
+    className="button is-primary"
+    to="/groups"
+    >
+    Teams
+    </Link>
 
       <hr />
 
       <div className="box">
-        <h1 className="subtitle">Dues Todays</h1>
+        <h1 className="subtitle">{filterTasks(tasks, {
+          isCompleted: false,
+          dueDate: currentDate
+        }).length ? 'Dues Todays': 'No Dues Today'}</h1>
         {filterTasks(tasks, {
           isCompleted: false,
           dueDate: currentDate
@@ -32,7 +42,7 @@ const Dashboard = ({ tasks }) => {
         ))}
       </div>
       <div className="block">
-        <button onClick={showDeviceInfo} className="button is-white">Show Device Info</button>
+        {/* <button onClick={showDeviceInfo} className="button is-white">Show Device Info</button> */ }
       </div>
     </div>
   );

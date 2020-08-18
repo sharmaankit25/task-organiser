@@ -73,7 +73,11 @@ const Messages = ({ sendMessages, loadMessages, groupId, messages, auth }) => {
           </div>
         </div>
     </QuickView>
-    <button style={{ position: 'fixed', bottom: 0, right:2 }} onClick={e => setChatModal(!chatModal)} className='button is-info is-medium'>Chat</button>
+    <button style={{ position: 'fixed', bottom: 0, right:2 }} onClick={e => setChatModal(!chatModal)} className='button is-info is-medium'>
+      <span className="icon">
+        <i className={`fas fa-comments`} ></i>
+      </span>
+    </button>
     </>
   )
 }

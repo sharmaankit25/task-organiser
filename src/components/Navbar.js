@@ -54,7 +54,7 @@ const Navbar = ({ auth,user }) => {
               className="navbar-item"
               to="/groups"
             >
-              Boards
+              Teams
             </Link>
             <Link
               onClick={closeNav}
