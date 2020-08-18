@@ -8,6 +8,10 @@ class ConferenceSocket extends Socket{
     groupVideoConferenceReceived = (group_id) => {
         return this.echo.join(`conference.${group_id}.group`)
     }
+
+    groupVideoConferenceDisconnected = (group_id) => {
+        return this.echo.join(`conference.${group_id}.group.disconnect`)
+    }
 }
 
 export default ConferenceSocket;
