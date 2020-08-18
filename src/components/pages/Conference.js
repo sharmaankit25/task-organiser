@@ -8,42 +8,49 @@ import Message from '../messages/Messages'
 
 export default function Conference({ match:{params:{slug,group_id}} }) {
     const [video]=useState(createRef())
-    const [usersVideos, setUserVideos] = useState({})
+    const [usersVideos, setUsersVideos] = useState({})
     const [localStream, setLocalStream] = useState(null)
     const [micState, setMicState] = useState(true)
     const [camState, setCamState] = useState(true)
     const [myPeer, setMyPeer] = useState(new Peer(undefined, {
-        host: '/',
-        secure: process.env.NODE_ENV !== 'development',
-        port: '9000'
-    }))
+            host: '/',
+            secure: process.env.NODE_ENV !== 'development',
+            port: '9000'
+        }))
 
     useEffect(() => {
         if (!localStream) {
-            getUserMedia().then(async () => {
-                if (myPeer.open) {
-                    await new ConferenceApi().fetch(myPeer.id, group_id)
+            getUserMedia()
+        }
+
+        if (myPeer) {
+            myPeer.on('open', async (id) => {
+                await new ConferenceApi().fetch(myPeer.id, group_id)
+            }).on('call', (call) => {
+                if (localStream) {
+                    call.answer(localStream)
+                    call.on('stream', userVideoStream => {
+                        setUsersVideos({ ...usersVideos, [call.peer]: userVideoStream })
+                        console.log(Object.keys(usersVideos).length, usersVideos)
+                    })
                 }
-            });
-        }
 
-        if (localStream) {
-            myPeer.on('call', call => {
-                call.answer(localStream)
-                call.on('stream', userVideoStream => {
-                    setUserVideos({ ...usersVideos, [call.peer]: userVideoStream })
-                })
             })
-
-            subscribeToVideoConferenceChannel(localStream)
         }
+
+        if (localStream && localStream.active) {
+            // console.log('LocalStream',localStream)
+            subscribeToVideoConferenceChannel()
+        }
+
 
         return () => {
             if (localStream) {
                 localStream.getTracks().forEach((track) => track.stop());
             }
         }
-    },[localStream])
+    },[localStream, myPeer])
+
 
     const setMyVideoObject = (stream) => {
         try {
@@ -62,12 +69,11 @@ export default function Conference({ match:{params:{slug,group_id}} }) {
                 height: { min: 120, ideal: 360, max: 360 }
               }, audio: true },
             stream => {
-                setMyVideoObject (stream)
                 setLocalStream(stream)
+                setMyVideoObject (stream)
                 resolve();
             },
             (error)=> {
-                console.log("error",error);
                 reject(error);
             }
           );
@@ -86,11 +92,14 @@ export default function Conference({ match:{params:{slug,group_id}} }) {
       }
 
     const setVideoLocal = () => {
-        if(localStream.getVideoTracks().length > 0){
-          localStream.getVideoTracks().forEach(track => {
-            track.enabled=!track.enabled;
-          });
+        if (localStream) {
+            if(localStream.getVideoTracks().length > 0){
+                localStream.getVideoTracks().forEach(track => {
+                  track.enabled=!track.enabled;
+                });
+            }
         }
+
         setCamState(!camState)
     }
 
@@ -109,22 +118,27 @@ export default function Conference({ match:{params:{slug,group_id}} }) {
         });
     }
 
-    const subscribeToVideoConferenceChannel = async (stream) => {
-        await new ConferenceSocket().groupVideoConferenceReceived(group_id)
+    const subscribeToVideoConferenceChannel = () => {
+        new ConferenceSocket().groupVideoConferenceReceived(group_id)
         .listen("ConferenceEvent", ({ id }) => {
-            connectToNewUser(id, stream)
-         })
+            // console.log('Other User Peer', id)
+            connectToNewUser(id)
+        })
     }
 
-    const connectToNewUser = (peerId, stream) => {
-        const call = myPeer.call(peerId, stream)
-        call.on('stream', userVideoStream => {
-            // Attach stream to video
-            setUserVideos({ ...usersVideos, [peerId]: userVideoStream })
-        })
-        call.on('close', () => {
-            console.log('Remove Video')
-        })
+    const connectToNewUser = (otherUserPeerId) => {
+        if (myPeer && localStream) {
+            myPeer.call(otherUserPeerId, localStream)
+            .on('stream', userVideoStream => {
+                // Attach stream to video
+                setUsersVideos({ ...usersVideos, [otherUserPeerId]: userVideoStream })
+                console.log(usersVideos)
+            })
+            .on('close', () => {
+                console.log('Remove Video')
+            })
+        }
+
     }
 
     return (
