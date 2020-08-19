@@ -28,7 +28,6 @@ export default function Conference({ match:{params:{slug,group_id}} }) {
     const groupVideoConferenceDisconnected = () => {
         new ConferenceSocket().groupVideoConferenceDisconnected(group_id)
         .listen("ConferenceDisconnectEvent", ({ id }) => {
-            console.log('Disconnect Peer ID', id)
             removeUserStream(id)
         })
     }
@@ -166,7 +165,6 @@ export default function Conference({ match:{params:{slug,group_id}} }) {
 
     return (
         <section className="section">
-        { /*<button onClick={() => removeUserStream(Object.keys(usersVideos)[0])} >Remove</button> */ }
         <div className="columns is-multiline">
             { Object.keys(usersVideos).length > 0 &&
                 <div className="column is-one-third">
