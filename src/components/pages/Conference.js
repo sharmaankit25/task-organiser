@@ -1,22 +1,21 @@
 import React, { useState, createRef, useEffect } from 'react';
-import { getDisplayStream } from '../../config/media-access';
+import { getDisplayStream, getCameraStream } from '../../config/media-access';
 import ConferenceSocket from '../../sockets/ConferenceSocket'
 import ConferenceApi from '../../apis/ConferenceApi'
-import Peer from 'peerjs';
+import Peerjs from 'peerjs'
+import { PeerConfig } from '../../config/peer'
 import VideoItem from '../VideoItem'
 import Message from '../messages/Messages'
 
 export default function Conference({ match:{params:{slug,group_id}} }) {
-    const [video, setVideoRef]=useState(createRef())
+    const [video]=useState(createRef())
     const [usersVideos, setUsersVideos] = useState({})
     const [localStream, setLocalStream] = useState(null)
     const [micState, setMicState] = useState(true)
     const [camState, setCamState] = useState(true)
-    const [myPeer, setMyPeer] = useState(new Peer(undefined, {
-            host: '/',
-            secure: process.env.NODE_ENV !== 'development',
-            port: '9000'
-        }))
+    const [screenState, setScreenState] = useState(false)
+    const [Peer, setPeer] = useState(null)
+
     const disconnectStream = async (id) => {
         await new ConferenceApi().disconnect(id, group_id)
     }
@@ -25,83 +24,177 @@ export default function Conference({ match:{params:{slug,group_id}} }) {
         await new ConferenceApi().connect(id, group_id)
     }
 
-    const groupVideoConferenceDisconnected = () => {
+    const subscribeDisconnectConferenceChannel = () => {
         new ConferenceSocket().groupVideoConferenceDisconnected(group_id)
         .listen("ConferenceDisconnectEvent", ({ id }) => {
-            removeUserStream(id)
+            if (Object.keys(usersVideos).length) {
+                console.log('ConferenceDisconnectEvent', id)
+                removeUserStream(id)
+            }
         })
+
     }
 
-    const subscribeToVideoConferenceChannel = () => {
+    const subscribeConnectConferenceChannel = () => {
         new ConferenceSocket().groupVideoConferenceReceived(group_id)
-        .listen("ConferenceEvent", ({ id }) => {
-            connectToNewUser(id)
+        .here((users) => {
+            console.log('Here ', users)
         })
+        .joining((user) => { console.log('Joining', user) })
+        .leaving((user)=> {
+            console.log('Leaving ', user)
+        })
+        .listen("ConferenceEvent", ({ id }) => {
+            console.log("ConferenceEvent", id)
+            connectToRemoteUser(id)
+        })
+        .listenForWhisper('typing', () => {
+
+        })
+
     }
 
-    useEffect(() => {
-        if (!localStream) {
-            getUserMedia()
-        }
+    // const removeSocketsSubscriptions = () => {
+    //     new ConferenceSocket().groupVideoConferenceReceived(group_id)
+    // }
 
-        if (myPeer) {
-            myPeer.on('open', (id) => {
-                connectStream(id)
+    const connectToRemoteUser = (otherUserPeerId) => {
+        if (Peer && localStream) {
+            console.log('Remote User Call')
+
+            Peer.call(otherUserPeerId, localStream)
+            Peer.on('stream', userVideoStream => {
+                setUsersVideos({ ...usersVideos, [otherUserPeerId]: userVideoStream })
             })
-            if (localStream && localStream.active) {
-                subscribeToVideoConferenceChannel()
-                groupVideoConferenceDisconnected()
+
+            Peer.on('disconnected', () => {
+                console.log("Remote Peer disconnected");
+            });
+
+            Peer.on('close', () => {
+                console.log("Remote Peer closed remotely");
+            });
+
+            Peer.on('error', (error) => {
+                console.log("peer error", error);
+            });
+        }
+    }
+    // Peer Effect
+    useEffect(() => {
+        if (!Peer) {
+            setPeer(new Peerjs(undefined, PeerConfig ))
+        } else {
+            Peer.on('open', (id) => {
+                connectStream(id)
+                subscribeDisconnectConferenceChannel()
+            })
+        }
+        return () => {
+            if (Peer) {
+                console.log('Clear Peer')
+                disconnectStream(Peer.id)
+                // Peer.disconnect()
+                // Peer.destroy()
+                setPeer(null)
             }
         }
+    }, [Peer])
+
+    // Stream Effect
+    useEffect(() => {
+        if (!localStream) {
+            if (!screenState) {
+                getUserMedia()
+            } else {
+                getDisplay()
+            }
+        } else {
+
+        }
+
+
 
         return () => {
             if (localStream) {
                 localStream.getTracks().forEach((track) => track.stop());
                 setLocalStream(null)
+                console.log('clear user videos')
+                setUsersVideos({})
             }
-            if (myPeer) {
-                disconnectStream(myPeer.id)
-                // setMyPeer(null)
-            }
-            setUsersVideos({})
-            // setVideoRef(undefined)
         }
-    },[localStream, myPeer])
+    }, [localStream, screenState])
 
-    if (myPeer) {
-        myPeer.on('call', (call) => {
-            if (localStream) {
+
+    useEffect(() => {
+        if (Peer && localStream) {
+            Peer.on('call', (call) => {
                 call.answer(localStream)
                 call.on('stream', userVideoStream => {
+                    console.log('On Call Stream', userVideoStream)
                     setUsersVideos({ ...usersVideos, [call.peer]: userVideoStream })
                 })
-            }
-        })
-    }
+                call.on('close', () => {
+                    console.log("The call has ended");
+                    removeUserStream(call.peer);
+                });
 
-    const setMyVideoObject = (stream) => {
-        try {
-            video.current.srcObject = stream
-        } catch (e) {
-            video.current.src = URL.createObjectURL(stream)
+                call.on('error', (error) => {
+                    console.log(error);
+                    removeUserStream(call.peer);
+                });
+            })
+
+            Peer.on('disconnected', () => {
+                console.log("My Peer disconnected");
+            });
+
+            Peer.on('close', () => {
+                console.log("Peer closed remotely");
+            });
+
+            Peer.on('error', (error) => {
+                console.log("peer error", error);
+            });
+            subscribeConnectConferenceChannel()
         }
-    }
+    }, [localStream, Peer])
 
-    const getUserMedia = () => {
-        navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
-        navigator.getUserMedia(
-        { video: {
-            width: { min: 160, ideal: 640, max: 640 },
-            height: { min: 120, ideal: 360, max: 360 }
-            }, audio: true },
-        stream => {
+
+    const getUserMedia = async () => {
+        try {
+            const stream = await getCameraStream()
             setLocalStream(stream)
             setMyVideoObject (stream)
-        },
-        (error)=> {
-            console.log(error)
+        } catch (err) {
+            console.log(err)
+            console.log('Not able to stream.')
         }
-        );
+        if (screenState) {
+            setScreenState(false)
+        }
+    }
+
+    const getDisplay = async () => {
+        try {
+            const stream = await getDisplayStream()
+            setLocalStream(stream)
+            setMyVideoObject (stream)
+            stream.oninactive = () => {
+                getUserMedia()
+            }
+        } catch (err) {
+            console.log('Not able to stream display.')
+        }
+        if (!screenState) {
+            setScreenState(true)
+        }
+    }
+
+    const removeUserStream = (userPeerId) => {
+        const newUserVideosObj = Object.assign({}, usersVideos)
+        delete newUserVideosObj[userPeerId]
+        setUsersVideos(newUserVideosObj)
     }
 
     const setAudioLocal = () => {
@@ -123,92 +216,69 @@ export default function Conference({ match:{params:{slug,group_id}} }) {
                 });
             }
         }
-
         setCamState(!camState)
     }
 
-    const removeUserStream = (userPeerId) => {
-        const newUserVideosObj = Object.assign({}, usersVideos)
-        delete newUserVideosObj[userPeerId]
-        setUsersVideos(newUserVideosObj)
-    }
-
-    const getDisplay = async () => {
-        const stream = await getDisplayStream()
-        console.log(stream, localStream)
-        // if (stream.active) {
-        //     setMyVideoObject(stream)
-        //     setLocalStream(()=>stream)
-        // }
-
-        // stream.oninactive = () => {
-        //     getUserMedia()
-        // }
-
-    }
-
-    const connectToNewUser = (otherUserPeerId) => {
-        if (myPeer && localStream) {
-            myPeer.call(otherUserPeerId, localStream)
-            .on('stream', userVideoStream => {
-                setUsersVideos({ ...usersVideos, [otherUserPeerId]: userVideoStream })
-            })
-        }
-
-        if (!localStream) {
-            myPeer.close()
-            myPeer.on('close', async (ctx) => {
-                console.log('Remove Video', ctx)
-            })
+    const setMyVideoObject = (stream) => {
+        if (stream.active) {
+            try {
+                video.current.srcObject = stream
+            } catch (e) {
+                video.current.src = URL.createObjectURL(stream)
+            }
         }
     }
 
-    return (
-        <section className="section">
-        <div className="columns is-multiline">
-            { Object.keys(usersVideos).length > 0 &&
-                <div className="column is-one-third">
-                    <div className="card">
-                    {
-                        Object.keys(usersVideos).map(userId => (
-                            <VideoItem key={userId} stream={usersVideos[userId]} />
-                        ))
+    if (localStream) {
+        return (
+            <section className="section">
+                <div className="columns is-multiline">
+                    { Object.keys(usersVideos).length > 0 &&
+                        <div className="column is-one-third">
+                            <div className="card">
+                            {
+                                Object.keys(usersVideos).map(userId => (
+                                    <VideoItem key={userId} stream={usersVideos[userId]} />
+                                ))
+                            }
+                            </div>
+                        </div>
                     }
+                        <div className="column is-one-third">
+                        <div className="card">
+                        <video playsInline muted ref={video} autoPlay={true} />
+                        <div className="columns is-vcentered">
+                        <span className="column is-two-thirds">
+                            <p style={{ padding: '0px 5px 0px 5px' }} className="subtitle">You</p>
+                        </span>
+                        <span className="column">
+                        <div className="buttons are-small">
+                            <button className="button is-secondary" onClick={() => setScreenState(!screenState)} >
+                            <span className="icon">
+                                <i className={`fas fa-desktop`} ></i>
+                            </span>
+                            </button>
+                            <button className="button is-danger" onClick={setAudioLocal} >
+                                <span className="icon">
+                                    <i className={`fas ${micState ? 'fa-microphone' : 'fa-microphone-slash'}`} ></i>
+                                </span>
+                            </button>
+                            <button className="button is-info" onClick={setVideoLocal} >
+                                <span className="icon">
+                                    <i className={`fas ${camState ? 'fa-video' : 'fa-video-slash'}`}></i>
+                                </span>
+                            </button>
+                        </div>
+                        </span>
+                        </div>
+                        </div>
                     </div>
                 </div>
-            }
+                <Message groupId={group_id} />
+            </section>
+        )
+    } else {
+        return (<div>Load Camera</div>)
+    }
 
-            <div className="column is-one-third">
-                <div className="card">
-                <video playsInline muted ref={video} autoPlay={true} />
-                <div className="columns is-vcentered">
-                <span className="column is-two-thirds">
-                    <p style={{ padding: '0px 5px 0px 5px' }} className="subtitle">You</p>
-                </span>
-                <span className="column">
-                <div className="buttons are-small">
-                    <button className="button is-secondary" onClick={getDisplay} >
-                    <span className="icon">
-                        <i className={`fas fa-desktop`} ></i>
-                    </span>
-                    </button>
-                    <button className="button is-danger" onClick={setAudioLocal} >
-                        <span className="icon">
-                            <i className={`fas ${micState ? 'fa-microphone' : 'fa-microphone-slash'}`} ></i>
-                        </span>
-                    </button>
-                    <button className="button is-info" onClick={setVideoLocal} >
-                        <span className="icon">
-                            <i className={`fas ${camState ? 'fa-video' : 'fa-video-slash'}`}></i>
-                        </span>
-                    </button>
-                </div>
-                </span>
-                </div>
-                </div>
-            </div>
-        </div>
-        <Message groupId={group_id} />
-        </section>
-    )
 }

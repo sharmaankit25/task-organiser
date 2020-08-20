@@ -1,12 +1,11 @@
 import Socket from "./Socket";
-class TaskSocket extends Socket{
-
+class TaskSocket {
     taskCreated = (user_id) => {
-        return this.echo.private(`tasks.${user_id}`)
+        return Socket.private(`tasks.${user_id}`)
     }
 
     taskUpdated = (user_id) => {
-        return this.echo.private(`tasks.updated.${user_id}`)
+        return Socket.private(`tasks.updated.${user_id}`)
     }
 }
 

@@ -4,15 +4,15 @@ import { connect } from 'react-redux';
 export default function(ComposedComponent) {
   class Guest extends Component {
     componentDidMount() {
-      const { history } = this.props;
       if (this.props.authenticated) {
+        const { history } = this.props;
         history.push('/');
       }
     }
 
     componentWillUpdate(nextProps) {
-      const { history } = this.props;
       if (nextProps.authenticated) {
+        const { history } = this.props;
         history.push('/');
       }
     }

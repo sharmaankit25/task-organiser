@@ -1,18 +1,24 @@
 import React, { useEffect ,useState, createRef } from 'react'
 
 export default ({ stream }) => {
-    const [video]=useState(createRef())
+    const [userVideo]=useState(createRef())
+
+    const setMyVideoObject = (stream) => {
+        if (stream.active) {
+            try {
+                userVideo.current.srcObject = stream
+            } catch (e) {
+                userVideo.current.src = URL.createObjectURL(stream)
+            }
+        }
+    }
 
     useEffect(() => {
-        try {
-            video.current.srcObject = stream
-        } catch (e) {
-            video.current.src = URL.createObjectURL(stream)
-        }
+        setMyVideoObject(stream)
     }, [])
 
     return (
-        <video playsInline ref={video} autoPlay={true} />
+        <video playsInline ref={userVideo} autoPlay={true} />
     )
 }
 

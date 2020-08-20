@@ -40,7 +40,7 @@ export const addTask = task => async dispatch => {
 };
 
 export const loadMessages = (type = 'group',id) => async dispatch => {
-  await new MessageSocket().groupMessageReceived(id).listen("NewMessageEvent", (e) => {
+  new MessageSocket().groupMessageReceived(id).listen("NewMessageEvent", (e) => {
     dispatch({
       type: ADD_MESSAGE,
       payload: e.message
@@ -158,11 +158,11 @@ export const authUser = () =>async dispatch => {
       payload:user.data
     });
 
-    await new TaskSocket().taskCreated(user.data.id).listen("TaskCreatedEvent", (e) => {
+    new TaskSocket().taskCreated(user.data.id).listen("TaskCreatedEvent", (e) => {
       dispatch(addTaskToReducer(e.task));
     });
 
-    await new TaskSocket().taskUpdated(user.data.id).listen("TaskUpdatedEvent", (e) => {
+    new TaskSocket().taskUpdated(user.data.id).listen("TaskUpdatedEvent", (e) => {
       dispatch(updateTaskInReducer(e.task))
     });
   }catch(err){
