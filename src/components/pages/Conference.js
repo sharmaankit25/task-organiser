@@ -1,4 +1,5 @@
 import React, { useState, createRef, useEffect } from 'react';
+import { connect } from 'react-redux'
 import { getDisplayStream, getCameraStream } from '../../config/media-access';
 import ConferenceSocket from '../../sockets/ConferenceSocket'
 import ConferenceApi from '../../apis/ConferenceApi'
@@ -7,7 +8,7 @@ import { PeerConfig } from '../../config/peer'
 import VideoItem from '../VideoItem'
 import Message from '../messages/Messages'
 
-export default function Conference({ match:{params:{slug,group_id}} }) {
+function Conference({ auth, match:{params:{slug,group_id}} }) {
     const [video]=useState(createRef())
     const [usersVideos, setUsersVideos] = useState({})
     const [localStream, setLocalStream] = useState(null)
@@ -16,56 +17,41 @@ export default function Conference({ match:{params:{slug,group_id}} }) {
     const [screenState, setScreenState] = useState(false)
     const [Peer, setPeer] = useState(null)
 
-    const disconnectStream = async (id) => {
-        await new ConferenceApi().disconnect(id, group_id)
-    }
-
     const connectStream = async (id) => {
         await new ConferenceApi().connect(id, group_id)
     }
 
-    const subscribeDisconnectConferenceChannel = () => {
-        new ConferenceSocket().groupVideoConferenceDisconnected(group_id)
-        .listen("ConferenceDisconnectEvent", ({ id }) => {
-            if (Object.keys(usersVideos).length) {
-                console.log('ConferenceDisconnectEvent', id)
-                removeUserStream(id)
-            }
-        })
-
-    }
-
     const subscribeConnectConferenceChannel = () => {
-        new ConferenceSocket().groupVideoConferenceReceived(group_id)
+        ConferenceSocket.groupVideoConferenceReceived(group_id)
         .here((users) => {
             console.log('Here ', users)
         })
-        .joining((user) => { console.log('Joining', user) })
+        .joining((user) => {
+            console.log('Joining', user)
+            connectToRemoteUser(user.id)
+        })
         .leaving((user)=> {
             console.log('Leaving ', user)
+            removeUserStream(user.id)
         })
         .listen("ConferenceEvent", ({ id }) => {
             console.log("ConferenceEvent", id)
             connectToRemoteUser(id)
         })
         .listenForWhisper('typing', () => {
-
+            console.log('Typing')
         })
-
     }
 
-    // const removeSocketsSubscriptions = () => {
-    //     new ConferenceSocket().groupVideoConferenceReceived(group_id)
-    // }
-
     const connectToRemoteUser = (otherUserPeerId) => {
-        if (Peer && localStream) {
-            console.log('Remote User Call')
-
+        if (Peer && localStream && otherUserPeerId) {
             Peer.call(otherUserPeerId, localStream)
-            Peer.on('stream', userVideoStream => {
+            .on('stream', userVideoStream => {
                 setUsersVideos({ ...usersVideos, [otherUserPeerId]: userVideoStream })
             })
+            .on('error', (error) => {
+                console.log("Remote User Call Peer error", error);
+            });
 
             Peer.on('disconnected', () => {
                 console.log("Remote Peer disconnected");
@@ -74,32 +60,29 @@ export default function Conference({ match:{params:{slug,group_id}} }) {
             Peer.on('close', () => {
                 console.log("Remote Peer closed remotely");
             });
-
-            Peer.on('error', (error) => {
-                console.log("peer error", error);
-            });
         }
     }
     // Peer Effect
     useEffect(() => {
         if (!Peer) {
-            setPeer(new Peerjs(undefined, PeerConfig ))
+            if (auth.authenticated && auth.user.id) {
+                setPeer(new Peerjs(auth.user.id, PeerConfig ))
+            }
         } else {
             Peer.on('open', (id) => {
                 connectStream(id)
-                subscribeDisconnectConferenceChannel()
             })
         }
         return () => {
             if (Peer) {
                 console.log('Clear Peer')
-                disconnectStream(Peer.id)
                 // Peer.disconnect()
                 // Peer.destroy()
                 setPeer(null)
+                ConferenceSocket.leaveConferenceGroup(group_id)
             }
         }
-    }, [Peer])
+    }, [Peer, auth])
 
     // Stream Effect
     useEffect(() => {
@@ -109,11 +92,7 @@ export default function Conference({ match:{params:{slug,group_id}} }) {
             } else {
                 getDisplay()
             }
-        } else {
-
         }
-
-
 
         return () => {
             if (localStream) {
@@ -128,35 +107,32 @@ export default function Conference({ match:{params:{slug,group_id}} }) {
 
     useEffect(() => {
         if (Peer && localStream) {
+            subscribeConnectConferenceChannel()
             Peer.on('call', (call) => {
+                console.log('ON Call')
                 call.answer(localStream)
                 call.on('stream', userVideoStream => {
                     console.log('On Call Stream', userVideoStream)
                     setUsersVideos({ ...usersVideos, [call.peer]: userVideoStream })
                 })
-                call.on('close', () => {
+                .on('error', (error) => {
+                    console.log(error);
+                    // removeUserStream(call.peer);
+                })
+                .on('close', () => {
                     console.log("The call has ended");
                     removeUserStream(call.peer);
                 });
-
-                call.on('error', (error) => {
-                    console.log(error);
-                    removeUserStream(call.peer);
-                });
             })
-
-            Peer.on('disconnected', () => {
+            .on('disconnected', () => {
                 console.log("My Peer disconnected");
-            });
-
-            Peer.on('close', () => {
+            })
+            .on('close', () => {
                 console.log("Peer closed remotely");
-            });
-
-            Peer.on('error', (error) => {
+            })
+            .on('error', (error) => {
                 console.log("peer error", error);
-            });
-            subscribeConnectConferenceChannel()
+            })
         }
     }, [localStream, Peer])
 
@@ -282,3 +258,7 @@ export default function Conference({ match:{params:{slug,group_id}} }) {
     }
 
 }
+
+const mapStateToProps = ({ auth }) => ({ auth })
+
+export default connect(mapStateToProps)(Conference)
